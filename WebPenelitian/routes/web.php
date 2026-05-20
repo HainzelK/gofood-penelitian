@@ -26,7 +26,7 @@ Route::get('/mulai-simulasi', function () {
     $domisili = session('domisili');
 
     if ($domisili == 'Toraja') {
-        return redirect('/simulasi/toraja');
+        return redirect('informasi_umum_toraja');
     } elseif ($domisili == 'Makassar') {
         return redirect('/simulasi/makassar');
     }
@@ -35,5 +35,5 @@ Route::get('/mulai-simulasi', function () {
 })->name('mulai.simulasi');
 
 // Halaman Khusus Daerah (Contoh Halaman Kosong)
-Route::get('/simulasi/toraja', function () { return "<h1>Selamat Datang di Simulasi Toraja</h1>"; });
-Route::get('/simulasi/makassar', function () { return "<h1>Selamat Datang di Simulasi Makassar</h1>"; });
+Route::get('/informasi_umum_toraja', function () { return view('informasi_umum_toraja'); });
+Route::get('/simulasi/makassar', function () { return view('simulasi.makassar'); });
