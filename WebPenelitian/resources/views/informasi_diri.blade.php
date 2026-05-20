@@ -15,35 +15,53 @@
         .field-container { height: 62px; position: relative; }
 
         /* --- LOGIKA FLOATING LABEL --- */
-        /* Label saat idle (di tengah) */
-        .floating-label {
-            position: absolute;
-            left: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            background-color: white;
-            padding: 0 0.25rem;
-            color: #6b7280;
-            transition: all 0.2s ease-in-out;
-            pointer-events: none; /* Klik tembus ke input */
-            z-index: 20;
-        }
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    
+    .appearance-none { appearance: none; -webkit-appearance: none; }
+    .field-container { height: 62px; position: relative; }
 
-        /* Label saat fokus atau input terisi */
-        .input-field:focus ~ .floating-label,
-        .input-field:not(:placeholder-shown) ~ .floating-label {
-            top: 0;
-            font-size: 0.75rem;
-            color: #00880d;
-            font-weight: 700;
-        }
+    /* --- LOGIKA FLOATING LABEL --- */
+    .floating-label {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: white;
+        padding: 0 0.25rem;
+        color: #6b7280;
+        transition: all 0.2s ease-in-out;
+        pointer-events: none;
+        z-index: 20;
+    }
 
-        /* Border hijau saat fokus atau terisi */
-        .input-field:focus,
-        .input-field:not(:placeholder-shown) {
-            border-color: #00880d;
-            border-width: 2px;
-        }
+    /* --- LOGIKA WARNA & POSISI (INPUT & SELECT) --- */
+
+    /* 1. Saat Fokus (Diklik) */
+    .input-field:focus ~ .floating-label,
+    .select-field:focus ~ .floating-label,
+    /* 2. Saat Terisi (Valid atau Ada Teks) */
+    .input-field:not(:placeholder-shown) ~ .floating-label,
+    .select-field:valid ~ .floating-label {
+        top: 0;
+        font-size: 0.75rem;
+        color: #00880d;
+        font-weight: 700;
+    }
+
+    /* 3. Border Hijau Saat Fokus atau Terisi */
+    .input-field:focus,
+    .select-field:focus,
+    .input-field:not(:placeholder-shown),
+    .select-field:valid {
+        border-color: #00880d;
+        border-width: 2px;
+    }
+
+    label, .floating-label {
+        transition: all 0.2s ease-in-out;
+    }
 
         /* Khusus Select (karena tidak punya placeholder-shown) */
         .select-field:valid ~ .floating-label {
