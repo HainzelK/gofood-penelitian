@@ -42,8 +42,8 @@ class Menu extends Model
     /**
      * Get the restaurant that owns the menu.
      */
-    public function restoran(): BelongsTo
-    {
-        return $this->belongsTo(Restoran::class, 'IdResto', 'idrestoran');
-    }
+public function menus() {
+    // Ubah parameter ke-2 dari 'idrestoran' menjadi 'IdResto'
+    return $this->hasMany(Menu::class, 'IdResto', 'idrestoran');
+}
 }
