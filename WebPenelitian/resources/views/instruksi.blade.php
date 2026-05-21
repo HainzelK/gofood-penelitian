@@ -37,7 +37,7 @@
             <div class="mt-12 flex justify-center">
                 <!-- Tombol ini memicu route pengecekan domisili -->
                 <a href="{{ route('mulai.simulasi') }}" 
-                   class="w-full md:w-auto px-12 py-3.5 bg-[#00880d] text-white font-bold rounded-xl hover:bg-[#00700a] transition-all text-lg shadow-md">
+                   class="w-full md:w-auto text-center px-12 py-3.5 bg-[#00880d] text-white font-bold rounded-xl hover:bg-[#00700a] transition-all text-lg shadow-md">
                     Mulai
                 </a>
             </div>
