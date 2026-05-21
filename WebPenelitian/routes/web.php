@@ -2,9 +2,14 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\RestoranController;
+
+// Restaurant and Menu API Routes
+Route::get('/restaurants', [RestoranController::class, 'index'])->name('restaurants.index');
+Route::get('/restaurants/{id}/menus', [RestoranController::class, 'showMenus'])->name('restaurants.menus');
 
 // Halaman 1 & 2 tetap sama...
-Route::get('/consent', function () { return view('persetujuan'); })->name('consent');
+Route::get('/consent', function () { return view('consent'); })->name('consent');
 Route::get('/informasi-diri', function () { return view('informasi_diri'); })->name('informasi.diri');
 
 // PROSES SIMPAN DOMISILI

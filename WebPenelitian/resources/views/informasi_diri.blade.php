@@ -124,11 +124,11 @@
                     <select name="pendidikan" id="pendidikan" required
                         class="select-field w-full h-full border-2 border-gray-300 rounded-2xl px-4 outline-none transition-all focus:ring-0 font-medium text-gray-800 appearance-none bg-transparent relative z-10 cursor-pointer">
                         <option value="" disabled selected hidden></option>
-                        <option value="SMA">SMA/Sederajat</option>
-                        <option value="D3">D3</option>
-                        <option value="S1">S1</option>
-                        <option value="S2">S2</option>
-                        <option value="S3">S3</option>
+                        <option value="SMA/Sederajat">SMA/Sederajat</option>
+                        <option value="Diploma(D3)">Diploma (D3)</option>
+                        <option value="Sarjana(S1)">Sarjana (S1)</option>
+                        <option value="Magister(S2)">Magister (S2)</option>
+                        <option value="Doktor(S3)">Doktor (S3)</option>
                     </select>
                     <label class="floating-label">Pendidikan Terakhir</label>
                     <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-800">
@@ -176,10 +176,11 @@
                 </div>
 
                 <!-- Footer -->
-                <div class="md:col-span-2 mt-6 flex flex-col md:flex-row items-center justify-between gap-6">
-                    <p class="text-[11px] text-red-600 italic max-w-sm">
-                    *Jangan lupa isi data diri dan nomor HP dengan tepat! Dapatkan kesempatan memenangkan saldo OVO/Pulsa sebesar Rp 500.000 untuk 10 orang pemenang beruntung. Pemenang akan diundi secara acak pada akhir periode pengumpulan data.                    </p>
-                    <button type="submit" class="w-full md:w-auto px-12 py-3.5 bg-[#00880d] text-white font-bold rounded-xl hover:bg-[#00700a] transition-all text-lg shadow-md">
+                <div class="md:col-span-2 mt-6 flex flex-col md:flex-row items-center gap-6">
+                    <p class="text-[14px] text-red-600 italic flex-1 max-w-none">
+                        *Jangan lupa isi data diri dan nomor HP dengan tepat! Dapatkan kesempatan memenangkan saldo OVO/Pulsa sebesar Rp 500.000 untuk 10 orang pemenang beruntung. Pemenang akan diundi secara acak pada akhir periode pengumpulan data.
+                    </p>
+                    <button type="submit" class="w-full md:w-auto px-12 py-3.5 bg-[#00880d] text-white font-bold rounded-xl hover:bg-[#00700a] transition-all text-lg shadow-md flex-shrink-0">
                         Selanjutnya
                     </button>
                 </div>
