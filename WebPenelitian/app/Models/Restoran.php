@@ -41,8 +41,8 @@ class Restoran extends Model
     /**
      * Get the menus for the restaurant.
      */
-    public function menus(): HasMany
-    {
-        return $this->hasMany(Menu::class, 'IdResto', 'idrestoran');
-    }
+public function menus() {
+    // Ubah parameter kedua dari 'idrestoran' menjadi 'IdResto'
+    return $this->hasMany(Menu::class, 'IdResto', 'idrestoran');
+}
 }
