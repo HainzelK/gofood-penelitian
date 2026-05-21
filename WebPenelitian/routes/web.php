@@ -33,7 +33,7 @@ Route::get('/mulai-simulasi', function () {
     if ($domisili == 'Toraja') {
         return redirect('informasi_umum_toraja');
     } elseif ($domisili == 'Makassar') {
-        return redirect('/simulasi/makassar');
+        return redirect('informasi_umum_makassar');
     }
     
     return redirect('/informasi-diri'); // Balik jika session hilang
@@ -41,4 +41,9 @@ Route::get('/mulai-simulasi', function () {
 
 // Halaman Khusus Daerah (Contoh Halaman Kosong)
 Route::get('/informasi_umum_toraja', function () { return view('informasi_umum_toraja'); });
-Route::get('/simulasi/makassar', function () { return view('simulasi.makassar'); });
+Route::get('/informasi_umum_makassar', function () { return view('informasi_umum_makassar'); });
+
+Route::get('/pilihan_menu', function () { return view('pilihan_menu'); })->name('pilihan.menu');
+
+// Route untuk halaman pilihan restoran berdasarkan jenis (HF atau TGGL)
+Route::get('/pilihan-restoran/{jenis}', [RestoranController::class, 'showByJenis'])->name('restoran.jenis');

@@ -37,13 +37,13 @@
             </h1>
             
             <p class="text-gray-700 leading-relaxed text-sm md:text-base font-medium">
-                Anda adalah pegawai di pusat Kota Rantepau atau Makale. Karena jadwal kerja yang padat, Anda mengandalkan Go-Food minimal 6x sebulan untuk makan siang.
+                Anda adalah pegawai di pusat Kota Rantepao atau Makale. Karena jadwal kerja yang padat, Anda mengandalkan Go-Food minimal 6x sebulan untuk makan siang.
             </p>
         </div>
 
         <!-- Floating Button Selanjutnya -->
         <div class="absolute bottom-10 right-10 z-20">
-            <a href="#" class="px-10 py-3 bg-[#00880d] text-white font-bold rounded-2xl hover:bg-[#00700a] shadow-lg shadow-green-900/20 transition-all text-center block">
+            <a href="{{ route('pilihan.menu') }}" class="w-full md:w-auto px-12 py-3.5 bg-[#00880d] text-white font-bold rounded-xl hover:bg-[#00700a] transition-all text-lg shadow-md">
                 Selanjutnya
             </a>
         </div>

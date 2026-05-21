@@ -34,6 +34,20 @@ class RestoranController extends Controller
         ]);
     }
 
+    // RestoranController.php
+        public function showByJenis($jenis)
+        {
+        $jenis = strtoupper($jenis);
+        
+        // Ambil data dari DB berdasarkan jenis (HF atau TGGL)
+        $restoran = Restoran::where('Jenis', $jenis)->get();
+        
+        // Tentukan judul halaman berdasarkan jenis
+        $title = ($jenis == 'HF') ? 'Menu Sehat' : 'Menu Reguler';
+        
+        return view('pilihan_restoran', compact('restoran', 'title', 'jenis'));
+    }
+
     /**
      * Display the menus of a specific restaurant.
      *
