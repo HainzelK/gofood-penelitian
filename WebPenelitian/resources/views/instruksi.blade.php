@@ -23,7 +23,7 @@
                 Instruksi Pengerjaan
             </h1>
 
-            <ul class="space-y-4 text-gray-700 leading-relaxed text-[15px] md:text-[16px]">
+            <ul class="space-y-4 text-gray-700 font-semibold leading-relaxed text-[18px] md:text-[18px]">
                 <li class="flex gap-2">
                     <span>•</span>
                     <p>Terima kasih telah mengisi data diri anda.</p>
@@ -37,7 +37,7 @@
             <div class="mt-12 flex justify-center">
                 <!-- Tombol ini memicu route pengecekan domisili -->
                 <a href="{{ route('mulai.simulasi') }}" 
-                   class="px-12 py-3 bg-[#00880d] text-white font-bold rounded-2xl hover:bg-[#00700a] shadow-lg shadow-green-100 transition-all text-center min-w-[150px]">
+                   class="w-full md:w-auto px-12 py-3.5 bg-[#00880d] text-white font-bold rounded-xl hover:bg-[#00700a] transition-all text-lg shadow-md">
                     Mulai
                 </a>
             </div>
