@@ -52,7 +52,7 @@
             <!-- Card Menu -->
             <div id="card-{{ $menu->idmenu }}" class="menu-card bg-white rounded-[2.8rem] shadow-sm p-6 border-2 border-transparent transition-all duration-300 flex flex-col h-full group relative">
                 <div class="aspect-video w-full rounded-[2.2rem] overflow-hidden mb-5 bg-gray-50">
-                    <img src="{{ asset('storage/menus/' . str_replace(' ', '', $menu->NamaMenu) . '.png') }}" 
+                    <img src="{{ asset('storage/' . str_replace([' ', '+'], '_', strtolower($menu->NamaMenu)) . '.png') }}" 
                          alt="{{ $menu->NamaMenu }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
                 </div>
 
