@@ -14,15 +14,13 @@
 
     <!-- Header -->
     <header class="bg-white py-3 px-4 md:px-6 shadow-sm border-b border-gray-100 sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto flex justify-between items-center">
+        <div class="max-w-10xl mx-auto flex justify-between items-center">
       <!-- Spacer agar logo tetap di tengah -->
             <div class="w-24 hidden md:block"></div>
             <!-- Logo (Center) -->
             <span class="text-[#00880d] font-bold text-lg md:text-xl tracking-tight">go-food.site</span>
-
-            <!-- Saldo (Right) -->
             <div class="relative border border-[#00880d] rounded-xl md:rounded-2xl px-3 py-1 text-right bg-white min-w-[100px] md:min-w-[130px]">
-                <span class="font-medium absolute -top-2 right-4 md:right-16 bg-white px-1 text-[8px] md:text-[10px] text-gray-800">Saldo Anda</span>
+                <span class="font-bold absolute -top-2 right-4 bg-white px-1 text-[8px] md:text-[10px] text-[#00880d] uppercase">Saldo Anda</span>
                 <span class="text-sm md:text-xl font-bold text-gray-800">Rp60,000</span>
             </div>
         </div>

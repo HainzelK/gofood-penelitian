@@ -101,58 +101,83 @@
         </div>
     </main>
 
-    <!-- FLOATING CART BAR -->
-    <div id="cart-modal-bar" class="hidden fixed bottom-6 md:bottom-10 left-1/2 -translate-x-1/2 w-[95%] max-w-4xl bg-[#fdfde1] rounded-[1.5rem] md:rounded-[2.5rem] p-3 md:p-5 shadow-2xl z-[100] border border-yellow-200 items-center justify-between animate-cart">
-        <div class="flex items-center gap-3">
-            <div class="w-10 h-10 md:w-12 md:h-12 bg-white rounded-xl md:rounded-2xl flex items-center justify-center shadow-sm text-[#00880d]">
+<!-- FLOATING CART BAR -->
+    <div id="cart-modal-bar" class="hidden fixed bottom-6 md:bottom-10 left-1/2 -translate-x-1/2 w-[95%] max-w-4xl bg-[#fdfde1] rounded-[1.5rem] md:rounded-[2.5rem] p-2 md:p-3 shadow-2xl z-[100] border border-yellow-200 items-center animate-cart flex flex-row">
+        
+        <!-- BAGIAN 1: INFO KERANJANG (Berhenti sebelum garis merah pertama) -->
+        <!-- flex-1 dan min-w-0 sangat penting agar truncate bekerja -->
+        <div class="flex items-center gap-2 md:gap-3 flex-1 min-w-0 pr-3 ">
+            <div class="w-10 h-10 md:w-14 md:h-14 bg-white rounded-xl md:rounded-2xl flex-shrink-0 flex items-center justify-center shadow-sm text-[#00880d]">
                 <i class="fas fa-shopping-basket text-lg md:text-2xl"></i>
             </div>
-            <div class="flex flex-col overflow-hidden">
+            <div class="flex flex-col min-w-0">
                 <span class="font-bold text-gray-900 text-[13px] md:text-lg leading-tight">Keranjang</span>
-                <span id="cart-items-list" class="text-[10px] md:text-[11px] text-gray-500 truncate max-w-[120px] md:max-w-xs italic">Belum ada pesanan</span>
+                <!-- ID ini akan menampilkan item dan otomatis terpotong (truncate) -->
+                <span id="cart-items-list" class="text-[10px] md:text-[12px] text-gray-500 truncate italic block">Belum ada pesanan</span>
             </div>
         </div>
 
-        <div class="flex items-center gap-3 md:gap-8">
-            <div class="text-right">
-                <span id="cart-total-price" class="font-extrabold text-gray-900 text-[15px] md:text-2xl tracking-tighter">Rp0</span>
-            </div>
-            <button onclick="openCheckoutModal()" class="px-4 md:px-12 py-2 md:py-3.5 bg-[#00880d] text-white font-bold rounded-xl md:rounded-2xl hover:bg-[#00700a] text-[11px] md:text-lg shadow-md active:scale-95 transition-all">
+        <!-- BAGIAN 2: HARGA (Berhenti sebelum garis merah kedua) -->
+        <!-- Lebar diatur tetap agar konsisten di tengah -->
+        <div class="w-24 md:w-40 flex-shrink-0 px-2 text-center">
+            <span id="cart-total-price" class="font-extrabold text-gray-900 text-[14px] md:text-2xl tracking-tighter block truncate">Rp0</span>
+        </div>
+
+        <!-- BAGIAN 3: TOMBOL -->
+        <div class="flex-shrink-0 pl-2">
+            <button onclick="openCheckoutModal()" class="px-4 md:px-10 py-3 md:py-4 bg-[#00880d] text-white font-bold rounded-xl md:rounded-[1.8rem] hover:bg-[#00700a] text-[11px] md:text-lg shadow-md active:scale-95 transition-all whitespace-nowrap">
                 Cek Keranjang
             </button>
         </div>
     </div>
 
+    
     <!-- CHECKOUT MODAL OVERLAY -->
     <div id="modal-overlay" class="hidden fixed inset-0 bg-black/60 z-[110] backdrop-blur-sm transition-opacity"></div>
 
     <!-- CHECKOUT MODAL CONTENT -->
-    <div id="checkout-popup" class="hidden fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-md bg-white rounded-[2.5rem] shadow-2xl z-[120] overflow-hidden animate-cart">
-        <div class="p-6 md:p-10">
-            <h2 class="text-xl md:text-2xl font-bold text-gray-900 mb-6">Keranjang Saya</h2>
+    <!-- 
+         Mobile: items-end (aligns to bottom)
+         Desktop: md:items-center (aligns to center)
+         justify-center: Always centers horizontally
+    -->
+    <div id="checkout-popup" class="hidden fixed inset-0 z-[120] flex items-end md:items-center justify-center pointer-events-none">
+        
+        <!-- Modal Body -->
+        <!-- w-full ensures it takes width on mobile, max-w-md limits it on desktop -->
+        <div class="w-full max-w-md bg-white rounded-t-[2.5rem] md:rounded-[2.5rem] shadow-2xl overflow-hidden animate-modal-up flex flex-col max-h-[90vh] pointer-events-auto relative">
+            
+            <div class="p-6 md:p-10 overflow-y-auto">
+                <h2 class="text-xl md:text-2xl font-bold text-gray-900 mb-6">Keranjang Saya</h2>
 
-            <!-- List Item di Modal -->
-            <div id="modal-items-container" class="space-y-6 mb-8">
-                <!-- Diisi via JS -->
+                <!-- List Item di Modal -->
+                <div id="modal-items-container" class="space-y-6 mb-8">
+                    <!-- Diisi via JS -->
+                </div>
+
+                <!-- Total -->
+                <div class="flex justify-between items-center border-t border-gray-100 pt-5 mb-8">
+                    <span class="text-gray-500 font-bold">Total</span>
+                    <span id="modal-total-display" class="text-xl md:text-2xl font-extrabold text-gray-900 tracking-tighter">Rp0</span>
+                </div>
+
+                <!-- Action -->
+                <div class="sticky bottom-0 bg-white pb-2">
+                    <button onclick="confirmOrder()" class="w-full py-3 md:py-4 bg-[#00880d] text-white font-bold rounded-2xl hover:bg-[#00700a] shadow-lg text-base md:text-lg active:scale-95 transition-all mb-3">
+                        Bayar Pesanan
+                    </button>
+                    <button onclick="closeCheckoutModal()" class="w-full py-2 text-gray-400 font-bold text-sm hover:text-gray-600 transition-colors">
+                        Kembali
+                    </button>
+                </div>
             </div>
-
-            <!-- Total -->
-            <div class="flex justify-between items-center border-t border-gray-100 pt-5 mb-8">
-                <span class="text-gray-500 font-bold">Total</span>
-                <span id="modal-total-display" class="text-xl md:text-2xl font-extrabold text-gray-900 tracking-tighter">Rp0</span>
-            </div>
-
-            <!-- Action -->
-            <button onclick="confirmOrder()" class="w-full py-3 md:py-4 bg-[#00880d] text-white font-bold rounded-2xl hover:bg-[#00700a] shadow-lg text-base md:text-lg active:scale-95 transition-all">
-                Bayar Pesanan
-            </button>
-            <button onclick="closeCheckoutModal()" class="w-full mt-3 text-gray-400 font-bold text-sm hover:text-gray-600 transition-colors">
-                Kembali
-            </button>
+            
         </div>
     </div>
 
-    <div class="h-24 md:h-32"></div>
+
+
+<div class="h-24 md:h-32"></div>
 
     <script>
         let cartState = { makanan: null, minuman: null };
@@ -213,7 +238,7 @@
                     
                     container.innerHTML += `
                         <div class="flex items-center gap-4">
-                            <img src="/storage/menus/${imgName}" class="w-16 h-14 md:w-20 md:h-16 object-cover rounded-xl bg-gray-50 border border-gray-100 shadow-sm" onerror="this.src='https://via.placeholder.com/100?text=Food'">
+                            <img src="/storage/${imgName}" class="w-16 h-14 md:w-20 md:h-16 object-cover rounded-xl bg-gray-50 border border-gray-100 shadow-sm" onerror="this.src='https://via.placeholder.com/100?text=Food'">
                             <div class="flex-1">
                                 <h4 class="font-bold text-gray-800 text-sm md:text-base leading-tight">${item.name}</h4>
                                 <p class="text-[10px] md:text-xs text-gray-400 font-bold mt-1">x1</p>
