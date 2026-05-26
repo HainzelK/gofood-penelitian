@@ -8,77 +8,81 @@ use Illuminate\Support\Facades\DB;
 
 class PlottingController extends Controller
 {
-public function store(Request $request)
-{
-    $domisili = $request->domisili;
-    $listPlotting = ['ITPT', 'IRPT', 'IRPR', 'ITPR'];
-    $limit = 30;
+    public function store(Request $request)
+    {
+        // 1. Validasi Input
+        $request->validate([
+            'nama' => 'required',
+            'domisili' => 'required',
+            'no_hp' => 'required',
+        ]);
 
-    // 1. Hitung jumlah orang di setiap plotting
-    $counts = [];
-    foreach ($listPlotting as $plot) {
-        $count = \App\Models\User::where('domisili', $domisili)
-                                ->where('plotting', $plot)
-                                ->count();
-        if ($count < $limit) {
-            $counts[$plot] = $count;
+        $domisili = $request->domisili;
+        $listPlotting = ['ITPT', 'IRPT', 'IRPR', 'ITPR'];
+        $limit = 30;
+
+        // 2. Logika Distribusi Rata & Randomize
+        $counts = [];
+        foreach ($listPlotting as $plot) {
+            $count = User::where('domisili', $domisili)
+                         ->where('plotting', $plot)
+                         ->count();
+            if ($count < $limit) {
+                $counts[$plot] = $count;
+            }
+        }
+
+        if (empty($counts)) {
+            return back()->with('error', 'Kuota untuk wilayah ' . $domisili . ' sudah penuh.');
+        }
+
+        $minCount = min($counts);
+        $availablePlots = array_keys($counts, $minCount);
+        $selectedPlotting = $availablePlots[array_rand($availablePlots)];
+
+        // 3. Simpan ke Session
+        session([
+            'data_pendaftar' => [
+                'nama' => $request->nama,
+                'gender' => $request->gender,
+                'usia' => $request->usia,
+                'pendidikan' => $request->pendidikan,
+                'domisili' => $domisili,
+                'kecamatan' => $request->kecamatan,
+                'pekerjaan' => $request->pekerjaan,
+                'no_hp' => $request->no_hp,
+                'plotting' => $selectedPlotting,
+            ]
+        ]);
+        session()->save();
+
+        // 4. Redirect berdasarkan domisili
+        if (strtolower($domisili) == 'makassar') {
+            return redirect()->route('info.makassar');
+        } else {
+            return redirect()->route('info.toraja');
         }
     }
 
-    if (empty($counts)) {
-        return back()->with('error', 'Kuota penuh.');
-    }
-
-    // --- LOGIKA RANDOMIZE BARU ---
-    // Cari angka terkecil (misal: 0)
-    $minCount = min($counts); 
-
-    // Ambil semua plotting yang isinya sama-sama paling sedikit (misal semua yang isinya 0)
-    $availablePlots = array_keys($counts, $minCount); 
-
-    // Acak dari daftar yang paling sedikit tersebut
-    $selectedPlotting = $availablePlots[array_rand($availablePlots)];
-    // -----------------------------
-
-    // Simpan ke Session
-    session([
-        'data_pendaftar' => [
-            'nama' => $request->nama,
-            'domisili' => $domisili,
-            'gender' => $request->gender,
-            'usia' => $request->usia,
-            'pendidikan' => $request->pendidikan,
-            'kecamatan' => $request->kecamatan,
-            'pekerjaan' => $request->pekerjaan,
-            'no_hp' => $request->no_hp,
-            'plotting' => $selectedPlotting,
-        ]
-    ]);
-    session()->save();
-
-    if (strtolower($domisili) == 'makassar') {
-        return redirect()->route('info.makassar');
-    } else {
-        return redirect()->route('info.toraja');
-    }
-}
     public function showPlotting()
     {
-        // Ambil dari session
         $dataSession = session('data_pendaftar');
 
-        // DEBUG: Jika data kosong, kita paksa balik ke form awal
         if (!$dataSession) {
-            return redirect()->route('informasi.diri')->with('error', 'Data session hilang.');
+            return redirect()->route('informasi.diri');
         }
 
         $plotting = $dataSession['plotting'];
 
+        // Mapping Konten Termasuk Ikon Dinamis
+        // Pastikan nama file gambar di asset('storage/...') sesuai
         $content = [
             'ITPT' => [
                 'bg' => 'itpt_bg.PNG',
                 'pajak' => 'TINGGI',
                 'insentif' => 'TINGGI',
+                'icon_pajak' => 'tggl_mahal.png', // Contoh: icon panah merah ke atas
+                'icon_insentif' => 'hf_naik.png', // Contoh: icon panah hijau ke bawah (subsidi)
                 'pajak_desc' => 'Menekan angka penyakit tidak menular (diabetes, obesitas, dll).',
                 'insentif_desc' => 'Mendorong pola konsumsi sehat secara signifikan.',
             ],
@@ -86,6 +90,8 @@ public function store(Request $request)
                 'bg' => 'irpt_bg.PNG',
                 'pajak' => 'TINGGI',
                 'insentif' => 'RENDAH',
+                'icon_pajak' => 'tggl_mahal.png',
+                'icon_insentif' => 'hf_murah.png',
                 'pajak_desc' => 'Mengurangi konsumsi makanan berisiko tinggi.',
                 'insentif_desc' => 'Potongan harga diberikan secara terbatas.',
             ],
@@ -93,6 +99,8 @@ public function store(Request $request)
                 'bg' => 'irpr_bg.PNG',
                 'pajak' => 'RENDAH',
                 'insentif' => 'RENDAH',
+                'icon_pajak' => 'tggl_murah.png',
+                'icon_insentif' => 'hf_murah.png',
                 'pajak_desc' => 'Menjaga keseimbangan antara kesehatan dan ekonomi.',
                 'insentif_desc' => 'Mendorong pola konsumsi sehat secara bertahap.',
             ],
@@ -100,6 +108,8 @@ public function store(Request $request)
                 'bg' => 'itpr_bg.PNG',
                 'pajak' => 'RENDAH',
                 'insentif' => 'TINGGI',
+                'icon_pajak' => 'tggl_murah.png',
+                'icon_insentif' => 'hf_naik.png',
                 'pajak_desc' => 'Menjaga harga pasar tetap stabil namun terkendali.',
                 'insentif_desc' => 'Mempermudah akses terhadap pilihan makanan sehat.',
             ],
