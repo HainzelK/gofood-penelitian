@@ -111,13 +111,16 @@
                     </div>
                 </div>
 
-                <!-- Usia -->
-                <div class="field-container">
-                    <input type="number" name="usia" id="usia" placeholder=" " required
-                        class="input-field w-full h-full border-2 border-gray-300 rounded-2xl pl-4 pr-16 outline-none transition-all focus:ring-0 font-medium text-gray-800">
-                    <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">tahun</span>
-                    <label class="floating-label">Usia</label>
-                </div>
+<!-- Usia (Sudah ditambah limit max 100) -->
+<div class="field-container">
+    <input type="number" name="usia" id="usia" placeholder=" " required
+        min="1" 
+        max="100" 
+        oninput="if(value > 100) value = 100; if(value < 0) value = '';"
+        class="input-field w-full h-full border-2 border-gray-300 rounded-2xl pl-4 pr-16 outline-none transition-all focus:ring-0 font-medium text-gray-800">
+    <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">tahun</span>
+    <label class="floating-label">Usia</label>
+</div>
 
                 <!-- Pendidikan Terakhir -->
                 <div class="field-container">
