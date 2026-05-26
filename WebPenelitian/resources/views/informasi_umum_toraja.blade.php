@@ -10,31 +10,43 @@
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
     </style>
 </head>
-<body class="bg-[#f2f8f2] min-h-screen flex flex-col overflow-x-hidden">
+<body class="bg-white min-h-screen flex flex-col overflow-hidden">
 
-    <header class="bg-white py-4 shadow-sm border-b border-gray-100 sticky top-0 z-50 flex justify-center">
+    <!-- Header dengan tinggi tetap (64px) -->
+    <header class="h-16 bg-white border-b border-gray-100 flex items-center justify-center z-50 flex-shrink-0">
         <span class="text-[#00880d] font-bold text-xl tracking-tight">go-food.site</span>
     </header>
 
-    <main class="relative flex-grow flex items-center justify-center md:justify-end overflow-hidden">
+    <!-- Main Container: Mengisi sisa layar -->
+    <main class="relative flex-grow w-full flex flex-col">
         
-        <!-- Background Image -->
+        <!-- Background Image Container -->
         <div class="absolute inset-0 z-0">
-            <img src="{{ asset('storage/toraja.PNG') }}" alt="Background Toraja" class="w-full h-full object-cover object-center brightness-90">
+            <!-- Gambar Desktop -->
+            <img src="{{ asset('storage/toraja.PNG') }}" 
+                 alt="Desktop" 
+                 class="hidden md:block w-full h-full object-cover object-top">
+            
+            <!-- Gambar HP -->
+            <img src="{{ asset('storage/phone_toraja.jpeg') }}" 
+                 alt="Mobile" 
+                 class="block md:hidden w-full h-full object-cover object-top">
+            
             <div class="absolute inset-0 bg-black/10"></div>
         </div>
 
-        <!-- Floating Info Card -->
-        <div class="relative z-10 w-[90%] md:w-[450px] bg-white/95 backdrop-blur-sm p-8 md:p-12 rounded-[2.5rem] shadow-2xl mx-4 md:mr-24 lg:mr-40 transition-all">
-            <h1 class="text-2xl md:text-3xl font-bold text-gray-900 mb-6">Informasi Umum</h1>
+        <!-- Floating Info Card (MUNCUL DI HP & DESKTOP) -->
+        <div class="relative z-10 w-[90%] md:w-[450px] bg-white/95 backdrop-blur-sm p-8 md:p-12 rounded-[2rem] md:rounded-[2.5rem] shadow-2xl mt-8 md:mt-20 mx-auto md:mr-24 md:ml-auto transition-all">
+            <h1 class="text-2xl md:text-3xl font-bold text-gray-900 mb-4 md:mb-6">Informasi Umum</h1>
             <p class="text-gray-700 leading-relaxed text-sm md:text-base font-medium">
                 Anda adalah pegawai di pusat Kota Rantepao atau Makale. Karena jadwal kerja yang padat, Anda mengandalkan Go-Food minimal 6x sebulan untuk makan siang.
             </p>
         </div>
 
         <!-- Floating Button Selanjutnya -->
-        <div class="absolute bottom-10 right-10 z-20">
-            <a href="{{ route('detail.plotting') }}" class="inline-block px-12 py-3.5 bg-[#00880d] text-white font-bold rounded-xl hover:bg-[#00700a] transition-all text-lg shadow-md">
+        <div class="absolute bottom-10 left-0 right-0 md:left-auto md:right-10 flex justify-center md:block z-20">
+            <a href="{{ route('detail.plotting') }}" 
+               class="w-[85%] md:w-auto text-center px-12 py-4 bg-[#00880d] text-white font-bold rounded-2xl hover:bg-[#00700a] transition-all text-lg shadow-xl">
                 Selanjutnya
             </a>
         </div>

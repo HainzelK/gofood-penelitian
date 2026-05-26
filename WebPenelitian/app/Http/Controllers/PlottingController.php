@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 
 class PlottingController extends Controller
 {
-    public function store(Request $request)
+public function store(Request $request)
     {
         // 1. Validasi Input
         $request->validate([
@@ -40,6 +40,19 @@ class PlottingController extends Controller
         $minCount = min($counts);
         $availablePlots = array_keys($counts, $minCount);
         $selectedPlotting = $availablePlots[array_rand($availablePlots)];
+
+        // --- HANYA SIMPAN KE TABEL USERS SESUAI GAMBAR ---
+        User::create([
+            'name'       => $request->nama,
+            'plotting'   => $selectedPlotting,
+            'domisili'   => $domisili,
+            'no_hp'      => str_replace(' ', '', $request->no_hp),
+            'gender'     => $request->gender,
+            'pendidikan' => $request->pendidikan,
+            'kecamatan'  => $request->kecamatan,
+            'pekerjaan'  => $request->pekerjaan,
+        ]);
+        // ------------------------------------------------
 
         // 3. Simpan ke Session
         session([
@@ -75,15 +88,13 @@ class PlottingController extends Controller
 
         $plotting = $dataSession['plotting'];
 
-        // Mapping Konten Termasuk Ikon Dinamis
-        // Pastikan nama file gambar di asset('storage/...') sesuai
         $content = [
             'ITPT' => [
                 'bg' => 'itpt_bg.PNG',
                 'pajak' => 'TINGGI',
                 'insentif' => 'TINGGI',
-                'icon_pajak' => 'tggl_mahal.png', // Contoh: icon panah merah ke atas
-                'icon_insentif' => 'hf_naik.png', // Contoh: icon panah hijau ke bawah (subsidi)
+                'icon_pajak' => 'tggl_mahal.png', 
+                'icon_insentif' => 'hf_naik.png', 
                 'pajak_desc' => 'Menekan angka penyakit tidak menular (diabetes, obesitas, dll).',
                 'insentif_desc' => 'Mendorong pola konsumsi sehat secara signifikan.',
             ],
@@ -124,10 +135,6 @@ class PlottingController extends Controller
         ]);
     }
 
-    /**
-     * Proses Bayar: Simpan semua data jawaban responden ke database.
-     * Data pendaftar diambil dari session, data lainnya dari AJAX request.
-     */
     public function prosesBayar(Request $request)
     {
         $dataSession = session('data_pendaftar');

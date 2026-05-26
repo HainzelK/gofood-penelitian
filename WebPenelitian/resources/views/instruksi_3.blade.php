@@ -21,8 +21,17 @@
         
         <!-- Background Image (Gambar Orang Pegang HP) -->
         <div class="absolute inset-0 z-0">
-            <img src="{{ asset('storage/buka_aplikasi_bg.PNG') }}" alt="Opening App" class="w-full h-full object-cover">
-            <div class="absolute inset-0 bg-black/5"></div>
+            <!-- Gambar Desktop -->
+            <img src="{{ asset('storage/instruksi3.PNG') }}" 
+                 alt="Desktop" 
+                 class="hidden md:block w-full h-full object-cover object-top">
+            
+            <!-- Gambar HP -->
+            <img src="{{ asset('storage/phone_instruksi3.jpeg') }}" 
+                 alt="Mobile" 
+                 class="block md:hidden w-full h-full object-cover object-top">
+            
+            <div class="absolute inset-0 bg-black/10"></div>
         </div>
 
         <!-- Sidebar Panel (Kiri) -->
