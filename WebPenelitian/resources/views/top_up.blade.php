@@ -36,16 +36,16 @@
 
             <!-- Grid Nominal -->
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-                <button onclick="prosesTopUp(10000)" class="bg-white border border-gray-200 py-8 rounded-2xl shadow-sm hover:shadow-md hover:border-[#00880d] transition-all text-lg font-bold text-gray-800">
+                <button onclick="prosesTopUp(10000)" class="nominal-btn bg-white border border-gray-200 py-8 rounded-2xl shadow-sm hover:shadow-md hover:border-[#00880d] transition-all text-lg font-bold text-gray-800">
                     10.000
                 </button>
-                <button onclick="prosesTopUp(25000)" class="bg-white border border-gray-200 py-8 rounded-2xl shadow-sm hover:shadow-md hover:border-[#00880d] transition-all text-lg font-bold text-gray-800">
+                <button onclick="prosesTopUp(25000)" class="nominal-btn bg-white border border-gray-200 py-8 rounded-2xl shadow-sm hover:shadow-md hover:border-[#00880d] transition-all text-lg font-bold text-gray-800">
                     25.000
                 </button>
-                <button onclick="prosesTopUp(50000)" class="bg-white border border-gray-200 py-8 rounded-2xl shadow-sm hover:shadow-md hover:border-[#00880d] transition-all text-lg font-bold text-gray-800">
+                <button onclick="prosesTopUp(50000)" class="nominal-btn bg-white border border-gray-200 py-8 rounded-2xl shadow-sm hover:shadow-md hover:border-[#00880d] transition-all text-lg font-bold text-gray-800">
                     50.000
                 </button>
-                <button onclick="prosesTopUp(100000)" class="bg-white border border-gray-200 py-8 rounded-2xl shadow-sm hover:shadow-md hover:border-[#00880d] transition-all text-lg font-bold text-gray-800">
+                <button onclick="prosesTopUp(100000)" class="nominal-btn bg-white border border-gray-200 py-8 rounded-2xl shadow-sm hover:shadow-md hover:border-[#00880d] transition-all text-lg font-bold text-gray-800">
                     100.000
                 </button>
             </div>
@@ -75,11 +75,42 @@
     </div>
 
     <script>
-        // Inisialisasi Saldo
+        // Inisialisasi Saldo & Status Top Up
         let saldoSaatIni = parseInt(localStorage.getItem('gofood_saldo')) || 60000;
-        document.getElementById('display-saldo-header').innerText = "Rp" + saldoSaatIni.toLocaleString('id-ID');
+        // Cek apakah sudah pernah top up (mengambil nilai 'true' dari storage)
+        let sudahTopUp = localStorage.getItem('gofood_already_topped_up') === 'true';
+
+        window.addEventListener('pageshow', function() {
+            renderTampilanTopUp();
+        });
+
+        function renderTampilanTopUp() {
+            // Update Saldo Header
+            const saldoHeader = document.getElementById('saldo-header');
+            if(saldoHeader) saldoHeader.innerText = "Rp" + saldoSaatIni.toLocaleString('id-ID');
+
+            // Jika sudah pernah top up, kita beri visual bahwa tombol tidak bisa diklik
+            if (sudahTopUp) {
+                const buttons = document.querySelectorAll('.nominal-btn');
+                buttons.forEach(btn => {
+                    btn.classList.add('opacity-50', 'cursor-not-allowed', 'grayscale');
+                    btn.onclick = function() { 
+                        alert("Maaf, Anda hanya diperbolehkan melakukan top up satu kali saja."); 
+                    };
+                });
+
+                // Opsional: Tambahkan pesan peringatan di bawah judul
+                const subTitle = document.querySelector('p.text-gray-600');
+                if(subTitle) subTitle.innerHTML = "Pilih Nominal <span class='text-red-500 font-bold'>(Batas Top Up Tercapai)</span>";
+            }
+        }
 
         function prosesTopUp(nominal) {
+            if (localStorage.getItem('gofood_already_topped_up') === 'true') {
+                alert("Batas top up hanya satu kali!");
+                return;
+            }
+
             // 1. Update Saldo di Storage
             saldoSaatIni += nominal;
             localStorage.setItem('gofood_saldo', saldoSaatIni);
