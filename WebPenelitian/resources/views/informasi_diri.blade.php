@@ -166,11 +166,9 @@
 
                 <!-- No HP (Fix: Klik di mana saja di box) -->
                 <div class="field-container group">
-                    <!-- Text +62 diposisikan absolut agar tidak ganggu area klik input -->
-                    <span class="absolute left-4 top-1/2 -translate-y-1/2 font-semibold text-gray-800 pointer-events-none z-20">+62</span>
                     <input type="tel" name="no_hp" id="no_hp" placeholder=" " required
                         oninput="formatPhoneNumber(this)"
-                        class="input-field w-full h-full border-2 border-gray-300 rounded-2xl pl-14 pr-4 outline-none transition-all focus:ring-0 font-medium text-gray-800 tracking-widest">
+                        class="input-field w-full h-full border-2 border-gray-300 rounded-2xl pl-4 pr-4 outline-none transition-all focus:ring-0 font-medium text-gray-800 tracking-widest">
                     <label class="floating-label">No. Handphone</label>
                     <p id="phone-error" class="text-[10px] text-red-500 mt-1 hidden absolute -bottom-5 left-2 italic">Minimal 9 angka.</p>
                 </div>
