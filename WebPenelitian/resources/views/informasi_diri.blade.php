@@ -171,6 +171,9 @@
                         class="input-field w-full h-full border-2 border-gray-300 rounded-2xl pl-4 pr-4 outline-none transition-all focus:ring-0 font-medium text-gray-800 tracking-widest">
                     <label class="floating-label">No. Handphone</label>
                     <p id="phone-error" class="text-[10px] text-red-500 mt-1 hidden absolute -bottom-5 left-2 italic">Minimal 10 angka.</p>
+                    @error('no_hp')
+                        <p class="text-xs text-red-500 mt-1 italic font-bold">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <!-- Footer -->
