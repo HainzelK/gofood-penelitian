@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\JawabanResponden;
 use Illuminate\Support\Facades\DB;
 
 class PlottingController extends Controller
@@ -121,5 +122,56 @@ class PlottingController extends Controller
             'data' => $viewData,
             'plotting' => $plotting
         ]);
+    }
+
+    /**
+     * Proses Bayar: Simpan semua data jawaban responden ke database.
+     * Data pendaftar diambil dari session, data lainnya dari AJAX request.
+     */
+    public function prosesBayar(Request $request)
+    {
+        $dataSession = session('data_pendaftar');
+
+        if (!$dataSession) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Session expired. Silakan isi informasi diri ulang.'
+            ], 422);
+        }
+
+        try {
+            JawabanResponden::create([
+                'Tanggal'            => now()->toDateString(),
+                'IS'                 => 'Setuju',
+                'Nama'               => $dataSession['nama'],
+                'Gender'             => $dataSession['gender'],
+                'Usia'               => $dataSession['usia'],
+                'PendidikanTerakhir' => $dataSession['pendidikan'],
+                'DaerahDomisili'     => $dataSession['domisili'],
+                'Kecamatan'          => $dataSession['kecamatan'],
+                'Pekerjaan'          => $dataSession['pekerjaan'],
+                'NoHP'               => $dataSession['no_hp'],
+                'Plotting'           => $dataSession['plotting'],
+                'Saldo'              => $request->input('saldo', 0),
+                'MenuMakanan'        => $request->input('menu_makanan', 0),
+                'MenuMinuman'        => $request->input('menu_minuman', 0),
+                'Subsidi/Insentif'   => $request->input('subsidi_insentif', 0),
+                'Pajak'              => $request->input('pajak', 0),
+                'Total'              => $request->input('total', 0),
+                'TopUp'              => $request->input('top_up', 0),
+                'TIME_CASE_PRES'     => $request->input('time_case_pres', '00:00:00'),
+                'TIME_ALL'           => $request->input('time_all', '00:00:00'),
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Data berhasil disimpan.'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menyimpan data: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }

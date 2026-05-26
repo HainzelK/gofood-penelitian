@@ -187,6 +187,9 @@
     </main>
 
     <script>
+        // Start TIME_ALL timer (waktu dari pengisian informasi diri)
+        localStorage.setItem('time_all_start', Date.now().toString());
+
         function formatPhoneNumber(input) {
             let value = input.value.replace(/\D/g, '');
             if (value.length > 13) value = value.slice(0, 13);
