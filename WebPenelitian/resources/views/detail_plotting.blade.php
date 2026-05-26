@@ -58,7 +58,7 @@
         </div>
 
         <div class="absolute bottom-8 right-8 z-20">
-            <a href="{{ route('restoran.jenis', ['jenis' => 'HF']) }}" class="px-12 py-3.5 bg-[#00880d] text-white font-bold rounded-xl hover:bg-[#00700a] transition-all text-lg shadow-xl inline-block">
+            <a href="{{ route('instruksi.3') }}" class="px-12 py-3.5 bg-[#00880d] text-white font-bold rounded-xl hover:bg-[#00700a] transition-all text-lg shadow-xl inline-block">
                 Selanjutnya
             </a>
         </div>

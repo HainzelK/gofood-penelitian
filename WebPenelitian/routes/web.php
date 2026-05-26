@@ -25,8 +25,13 @@ Route::get('/informasi_umum_makassar', function () { return view('informasi_umum
 // showPlotting akan mengembalikan view instruksi sesuai plotting user (itpt, irpt, dll)
 Route::get('/detail-plotting', [PlottingController::class, 'showPlotting'])->name('detail.plotting');
 
+// Halaman Step 3 (Konstan)
+Route::get('/instruksi_3', function () {
+    return view('instruksi_3');
+})->name('instruksi.3');
+
 // 6. Halaman Restoran & Menu (TETAP)
-Route::get('/pilihan_menu', function () { return view('pilihan_menu'); })->name('pilihan.menu');
+Route::get('/pilihan_menu', function () { return view('pilihan_menu'); })->name('pilihan.menu');    
 Route::get('/pilihan-restoran/{jenis}', [RestoranController::class, 'showByJenis'])->name('restoran.jenis');
 Route::get('/restoran/{id}/menu', [RestoranController::class, 'showMenuPage'])->name('restoran.menu');
 
