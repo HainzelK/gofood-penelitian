@@ -35,5 +35,11 @@ Route::get('/pilihan_menu', function () { return view('pilihan_menu'); })->name(
 Route::get('/pilihan-restoran/{jenis}', [RestoranController::class, 'showByJenis'])->name('restoran.jenis');
 Route::get('/restoran/{id}/menu', [RestoranController::class, 'showMenuPage'])->name('restoran.menu');
 
-// Catatan: Route /mulai-simulasi dan /instruksi (statis) dihapus/tidak dipakai 
-// karena alur Anda sekarang langsung ke Info Umum lalu ke Detail Plotting.
+Route::get('/pembayaran', function () {
+    // Anda bisa menambahkan logic untuk mengambil data pesanan di sini jika perlu
+    return view('pembayaran');
+})->name('pembayaran');
+
+Route::get('/topup', function () {
+    return view('top_up');
+})->name('topup');

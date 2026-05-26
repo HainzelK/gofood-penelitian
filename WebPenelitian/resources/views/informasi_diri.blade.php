@@ -170,7 +170,7 @@
                         oninput="formatPhoneNumber(this)"
                         class="input-field w-full h-full border-2 border-gray-300 rounded-2xl pl-4 pr-4 outline-none transition-all focus:ring-0 font-medium text-gray-800 tracking-widest">
                     <label class="floating-label">No. Handphone</label>
-                    <p id="phone-error" class="text-[10px] text-red-500 mt-1 hidden absolute -bottom-5 left-2 italic">Minimal 9 angka.</p>
+                    <p id="phone-error" class="text-[10px] text-red-500 mt-1 hidden absolute -bottom-5 left-2 italic">Minimal 10 angka.</p>
                 </div>
 
                 <!-- Footer -->
@@ -192,7 +192,7 @@
             if (value.length > 13) value = value.slice(0, 13);
             let formattedValue = "";
             for (let i = 0; i < value.length; i++) {
-                if (i === 3 || i === 7 || i === 11) formattedValue += " ";
+                if (i === 4 || i === 8 || i === 12) formattedValue += " ";
                 formattedValue += value[i];
             }
             input.value = formattedValue;

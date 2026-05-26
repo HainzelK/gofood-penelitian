@@ -23,8 +23,8 @@
             </div>
             <span class="text-[#00880d] font-bold text-lg md:text-xl tracking-tight text-center flex-1 md:flex-none">go-food.site</span>
             <div class="relative border border-[#00880d] rounded-xl md:rounded-2xl px-3 py-1 text-right bg-white min-w-[100px] md:min-w-[130px]">
-                <span class="font-bold absolute -top-2 right-4 bg-white px-1 text-[8px] md:text-[10px] text-[#00880d] uppercase">Saldo Anda</span>
-                <span class="text-sm md:text-xl font-bold text-gray-800">Rp60,000</span>
+                <span class="font-bold absolute -top-2 right-4 bg-white px-2 text-[10px] md:text-[10px] text-[#00880d] uppercase">Saldo Anda</span>
+                <span id="display-saldo-header" class="text-sm md:text-xl font-bold text-gray-800">Rp60,000</span>
             </div>
         </div>
     </header>
@@ -92,6 +92,25 @@
         </div>
 
     </main>
+    
+    <script>
+        window.addEventListener('pageshow', function(event) {
+            updateHeaderSaldo();
+        });
+    
+        // Kita buat fungsi terpisah agar bisa dipanggil kapan saja
+        function updateHeaderSaldo() {
+            const saldoHeader = document.getElementById('display-saldo-header');
+            if (saldoHeader) {
+                // Ambil saldo terbaru dari localStorage
+                const currentSaldo = parseInt(localStorage.getItem('gofood_saldo')) || 60000;
+                
+                // Update teks di header
+                saldoHeader.innerText = "Rp" + currentSaldo.toLocaleString('id-ID');
+                
+                console.log("Saldo diupdate otomatis:", currentSaldo);
+            }
+        }    </script>
 
     <!-- Footer Space -->
     <div class="h-10 md:h-20"></div>

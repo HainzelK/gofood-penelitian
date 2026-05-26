@@ -31,8 +31,8 @@
             </div>
             <span class="text-[#00880d] font-bold text-lg md:text-xl tracking-tight text-center flex-1 md:flex-none">go-food.site</span>
             <div class="relative border border-[#00880d] rounded-xl md:rounded-2xl px-3 py-1 text-right bg-white min-w-[100px] md:min-w-[130px]">
-                <span class="font-bold absolute -top-2 right-4 bg-white px-1 text-[8px] md:text-[10px] text-[#00880d] uppercase">Saldo Anda</span>
-                <span class="text-sm md:text-xl font-bold text-gray-800">Rp60,000</span>
+                <span class="font-bold absolute -top-2 right-4 bg-white px-2 text-[10px] md:text-[10px] text-[#00880d] uppercase">Saldo Anda</span>
+                <span id="display-saldo-header" class="text-sm md:text-xl font-bold text-gray-800">Rp60,000</span>
             </div>
         </div>
     </header>
@@ -180,10 +180,38 @@
 <div class="h-24 md:h-32"></div>
 
     <script>
-        let cartState = { makanan: null, minuman: null };
+        window.addEventListener('pageshow', function(event) {
+            updateHeaderSaldo();
+        });
+    
+        // Kita buat fungsi terpisah agar bisa dipanggil kapan saja
+        function updateHeaderSaldo() {
+            const saldoHeader = document.getElementById('display-saldo-header');
+            if (saldoHeader) {
+                // Ambil saldo terbaru dari localStorage
+                const currentSaldo = parseInt(localStorage.getItem('gofood_saldo')) || 60000;
+                
+                // Update teks di header
+                saldoHeader.innerText = "Rp" + currentSaldo.toLocaleString('id-ID');
+                
+                console.log("Saldo diupdate otomatis:", currentSaldo);
+            }
+        }
 
+        // 1. AMBIL DATA DARI STORAGE SAAT HALAMAN DIBUKA (Agar tidak hilang saat refresh)
+        let cartState = JSON.parse(localStorage.getItem('gofood_cart')) || { makanan: null, minuman: null };
+        
+        // 2. JALANKAN UPDATE UI SEGERA SAAT HALAMAN DIMUAT
+        window.onload = function() {
+            updateUI();
+        };
+    
         function addToCart(id, name, price, type) {
             cartState[type] = { id, name, price };
+            
+            // SIMPAN KE STORAGE SETIAP KALI ITEM DITAMBAHKAN
+            localStorage.setItem('gofood_cart', JSON.stringify(cartState));
+            
             updateUI();
         }
 
@@ -192,6 +220,7 @@
             const listText = document.getElementById('cart-items-list');
             const totalText = document.getElementById('cart-total-price');
             
+            // Reset semua tampilan kartu dulu
             document.querySelectorAll('.menu-card').forEach(c => c.classList.remove('selected-card'));
             document.querySelectorAll('button i[id^="icon-"]').forEach(icon => {
                 icon.className = 'fas fa-plus text-[10px] md:text-lg';
@@ -205,6 +234,8 @@
                 if (item) {
                     total += item.price;
                     names.push(item.name);
+
+                    // Beri tanda centang dan border hijau pada item yang ada di storage
                     const card = document.getElementById(`card-${item.id}`);
                     if(card) card.classList.add('selected-card');
                     const icon = document.getElementById(`icon-${item.id}`);
@@ -244,7 +275,7 @@
                                 <p class="text-[10px] md:text-xs text-gray-400 font-bold mt-1">x1</p>
                             </div>
                             <div class="text-right">
-                                <button onclick="removeItem('${type}')" class="flex items-center gap-1 text-[10px] md:text-xs font-bold text-red-500 border border-red-50 px-2 py-1.5 rounded-xl hover:bg-red-50 mb-1 transition-all">
+                                <button onclick="removeItem('${type}')" class="flex items-center gap-1 text-[10px] md:text-xs font-bold text-red-500 border border-red-200 px-2 py-1.5 rounded-xl hover:bg-red-50 mb-1 transition-all">
                                     <i class="fas fa-trash-alt"></i> Hapus
                                 </button>
                                 <p class="font-extrabold text-gray-900 text-sm md:text-base">Rp${item.price.toLocaleString('id-ID')}</p>
@@ -277,7 +308,24 @@
         }
 
         function confirmOrder() {
-            alert("Pesanan Diterima! Melanjutkan ke pembayaran.");
+            // 1. Cek apakah ada data di cartState
+            console.log("Data yang akan disimpan:", cartState);
+                
+            if (!cartState.makanan && !cartState.minuman) {
+                alert("Silakan pilih menu terlebih dahulu!");
+                return;
+            }
+        
+            // 2. Simpan ke LocalStorage dengan nama key 'gofood_cart'
+            localStorage.setItem('gofood_cart', JSON.stringify(cartState));
+        
+            // 3. Verifikasi sebentar apakah sudah tersimpan (opsional untuk debug)
+            const check = localStorage.getItem('gofood_cart');
+            console.log("Data di storage saat ini:", check);
+        
+            // 4. Pindah ke route /pembayaran
+            // Gunakan URL lengkap jika perlu, atau /pembayaran sesuai route Laravel Anda
+            window.location.href = "/pembayaran"; 
         }
 
         document.getElementById('modal-overlay').onclick = closeCheckoutModal;
