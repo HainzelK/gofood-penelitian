@@ -14,6 +14,17 @@
 </head>
 <body class="bg-[#f2f8f2] min-h-screen flex flex-col">
 
+    @php
+        $dataPendaftar = session('data_pendaftar');
+        $plotting = $dataPendaftar['plotting'] ?? 'IRPR';
+        
+        $plottingConfig = [
+            'plotting_code' => $plotting,
+            'pajak_rate' => in_array($plotting, ['ITPT', 'IRPT']) ? 0.20 : 0.05,
+            'insentif_rate' => in_array($plotting, ['ITPT', 'ITPR']) ? 0.20 : 0.05,
+        ];
+    @endphp
+
     <!-- Header -->
     <header class="bg-white py-3 px-4 md:px-6 shadow-sm border-b border-gray-100 sticky top-0 z-50">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
@@ -31,42 +42,36 @@
     </header>
 
     <main class="flex-grow flex items-center justify-center px-4 py-10">
-        <!-- Box Ringkasan -->
         <div class="w-full max-w-2xl bg-white rounded-[2rem] shadow-xl p-8 md:p-12 border border-gray-100">
             <h1 class="text-xl md:text-2xl font-extrabold text-gray-900 mb-8">Ringkasan Pembayaran</h1>
 
             <div class="space-y-4">
-                <!-- Subtotal Harga Makanan -->
                 <div class="flex justify-between items-start">
                     <span class="text-gray-600 font-semibold text-base md:text-lg">Harga</span>
                     <span id="display-subtotal" class="text-gray-900 font-bold text-base md:text-lg">0</span>
                 </div>
                 
-                <!-- List Item Dinamis -->
-                <div id="item-list" class="pl-4 space-y-2 text-gray-500 text-sm md:text-base italic">
-                    <!-- Diisi oleh JS -->
-                </div>
+                <div id="item-list" class="pl-4 space-y-2 text-gray-500 text-sm md:text-base italic"></div>
 
-                <!-- Pajak -->
-                <div class="flex justify-between py-2">
-                    <span class="text-gray-600 font-semibold">Pajak Restoran (5%)</span>
-                    <span id="display-tax" class="text-gray-900 font-bold">0</span>
+                <!-- Kebijakan: Insentif (HF) atau Pajak (TGGL) -->
+                <div id="row-kebijakan" class="flex justify-between py-2 hidden">
+                    <span id="label-kebijakan" class="text-gray-600 font-semibold"></span>
+                    <span id="display-kebijakan-val" class="text-gray-900 font-bold">0</span>
                 </div>
 
                 <!-- Biaya Kirim -->
                 <div class="flex justify-between py-2 border-b border-gray-300 pb-6">
                     <span class="text-gray-600 font-semibold">Biaya Pengiriman dan Pengemasan</span>
-                    <span class="text-gray-900 font-bold">15,000</span>
+                    <span class="text-gray-900 font-bold">15.000</span>
                 </div>
 
                 <!-- Total Akhir -->
                 <div class="flex justify-between items-center pt-4">
                     <span class="text-xl md:text-2xl font-extrabold text-gray-900">Total Harga</span>
-                    <span id="display-total-akhir" class="text-xl md:text-2xl font-extrabold text-gray-900">0</span>
+                    <span id="display-total-akhir" class="text-xl md:text-2xl font-extrabold text-[#00880d]">0</span>
                 </div>
             </div>
 
-            <!-- Tombol Bayar -->
             <div class="mt-10 flex justify-end">
                 <button onclick="toggleModal(true)" class="bg-[#00880d] hover:bg-[#00700a] text-white font-extrabold py-3 px-8 rounded-xl md:rounded-2xl text-base md:text-lg shadow-lg active:scale-95 transition-all">
                     Bayar & Proses Pengantaran
@@ -83,109 +88,26 @@
                 Total belanja Anda adalah sebesar <br>
                 <span id="modal-total-text" class="text-xl md:text-3xl font-extrabold">Rp0</span>
             </h2>
-
             <div class="flex flex-row gap-4 justify-center">
-                <!-- Tombol Cancel tetap -->
                 <button onclick="toggleModal(false)" class="flex-1 py-3 border-2 border-red-500 text-red-500 font-bold rounded-xl md:rounded-2xl hover:bg-red-50 transition-colors">
                     Cancel
                 </button>
-
-                <!-- WADAH TOMBOL DINAMIS (Bayar atau Top Up) -->
                 <div id="modal-action-button" class="flex-1">
-                    <!-- Akan diisi oleh JavaScript -->
+                    <!-- Diisi dinamis: Bayar atau Top Up -->
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // 1. Jalankan fungsi saat halaman selesai dimuat
-        document.addEventListener('DOMContentLoaded', function() {
-            renderRingkasan();
-        });
+        const PLOTTING_DATA = @json($plottingConfig);
+        const CONFIG = { SHIPPING: 15000 };
 
-        function renderRingkasan() {
-            // --- A. AMBIL DATA ---
-            const rawData = localStorage.getItem('gofood_cart');
-            const saldoSaatIni = parseInt(localStorage.getItem('gofood_saldo')) || 60000;
-
-            // Update tampilan saldo di header
-            const saldoHeader = document.getElementById('display-saldo-header');
-            if(saldoHeader) saldoHeader.innerText = "Rp" + saldoSaatIni.toLocaleString('id-ID');
-
-            // Validasi jika keranjang kosong
-            if (!rawData || rawData === '{"makanan":null,"minuman":null}') {
-                alert("Keranjang kosong! Anda akan dikembalikan ke halaman menu.");
-                window.location.href = "/"; 
-                return;
-            }
-
-            const cart = JSON.parse(rawData);
-
-            // --- B. HITUNG NILAI ---
-            let subtotal = 0;
-            const listContainer = document.getElementById('item-list');
-            listContainer.innerHTML = ''; 
-
-            Object.keys(cart).forEach(key => {
-                const item = cart[key];
-                if (item && item.name && item.price) {
-                    subtotal += item.price;
-                    listContainer.innerHTML += `
-                        <div class="flex justify-between py-1">
-                            <span>• ${item.name}</span>
-                            <span>${item.price.toLocaleString('id-ID')}</span>
-                        </div>
-                    `;
-                }
-            });
-
-            const tax = subtotal * 0.05;
-            const shipping = 15000;
-            const totalAkhir = subtotal + tax + shipping;
-
-            // Simpan ke variabel global agar bisa diakses fungsi prosesBayar
-            window.currentTotal = totalAkhir;
-
-            // --- C. UPDATE TAMPILAN HARGA ---
-            document.getElementById('display-subtotal').innerText = subtotal.toLocaleString('id-ID');
-            document.getElementById('display-tax').innerText = tax.toLocaleString('id-ID');
-            document.getElementById('display-total-akhir').innerText = totalAkhir.toLocaleString('id-ID');
-
-            const modalTotalText = document.getElementById('modal-total-text');
-            if(modalTotalText) {
-                modalTotalText.innerText = "Rp. " + totalAkhir.toLocaleString('id-ID');
-            }
-
-            // --- D. LOGIKA TOMBOL (BAYAR vs TOP UP) ---
-            const btnContainer = document.getElementById('modal-action-button');
-            if (!btnContainer) return;
-
-            console.log("Saldo saat ini:", saldoSaatIni);
-            console.log("Total akhir:", totalAkhir );
-            if (saldoSaatIni < totalAkhir) {
-                // Jika saldo kurang, tampilkan tombol Top Up
-                btnContainer.innerHTML = `
-                    <button onclick="window.location.href='/topup'" class="bg-[#ffcc00] hover:bg-[#e6b800] text-black font-extrabold py-3 px-8 rounded-xl shadow-lg transition-all w-full md:w-auto">
-                        Top Up Saldo
-                    </button>
-                `;
-            } else {
-                // Jika saldo cukup, tampilkan tombol Bayar
-                btnContainer.innerHTML = `
-                    <button onclick="prosesBayar()" class="bg-[#00880d] hover:bg-[#00700a] text-white font-extrabold py-3 px-8 rounded-xl shadow-lg transition-all w-full md:w-auto">
-                        Bayar & Proses Pengantaran
-                    </button>
-                `;
-            }
+        function formatRupiah(amount) {
+            return Math.round(amount).toLocaleString('id-ID');
         }
 
-        function toggleModal(show) {
-            const modal = document.getElementById('payment-modal');
-            if(modal) modal.classList.toggle('hidden', !show);
-        }
-
-        // Helper: Konversi milidetik ke format HH:MM:SS
+        // Helper: Konversi milidetik ke format HH:MM:SS sesuai snippet 1
         function formatElapsedTime(ms) {
             if (!ms || ms <= 0) return '00:00:00';
             let totalSeconds = Math.floor(ms / 1000);
@@ -199,9 +121,100 @@
             ].join(':');
         }
 
+        function calculateFoodAdjustment(category, price) {
+            const { pajak_rate, insentif_rate } = PLOTTING_DATA;
+            if (category === 'HF') {
+                return {
+                    adjustment: -(price * insentif_rate),
+                    label: `Insentif Menu Sehat (-${insentif_rate * 100}%)`,
+                    type: 'discount'
+                };
+            } else if (category === 'TGGL') {
+                return {
+                    adjustment: price * pajak_rate,
+                    label: `Pajak Kebijakan (+${pajak_rate * 100}%)`,
+                    type: 'tax'
+                };
+            }
+            return { adjustment: 0, label: '', type: 'none' };
+        }
+
+        document.addEventListener('DOMContentLoaded', renderRingkasan);
+
+        function renderRingkasan() {
+            const rawData = localStorage.getItem('gofood_cart');
+            const saldoSaatIni = parseInt(localStorage.getItem('gofood_saldo')) || 60000;
+            
+            document.getElementById('display-saldo-header').innerText = "Rp" + formatRupiah(saldoSaatIni);
+
+            if (!rawData || rawData === '{"makanan":null,"minuman":null}') { 
+                alert("Keranjang kosong!");
+                window.location.href = "/"; 
+                return; 
+            }
+            
+            const cart = JSON.parse(rawData);
+            let subtotal = 0, foodAdjustment = 0, kebijakanLabel = "";
+            const listContainer = document.getElementById('item-list');
+            listContainer.innerHTML = ''; 
+
+            Object.keys(cart).forEach(key => {
+                const item = cart[key];
+                if (!item || !item.price) return;
+
+                subtotal += item.price;
+                listContainer.innerHTML += `
+                    <div class="flex justify-between py-1">
+                        <span>• ${item.name}</span>
+                        <span>${formatRupiah(item.price)}</span>
+                    </div>
+                `;
+
+                if (key === 'makanan') {
+                    // Logic penentuan HF/TGGL berdasarkan ID Menu (Sesuai database mapping)
+                    const hfMenuIds = [1, 2, 3, 6, 7, 8, 11, 12, 13];
+                    const category = hfMenuIds.includes(parseInt(item.id)) ? 'HF' : 'TGGL';
+                    
+                    const result = calculateFoodAdjustment(category, item.price);
+                    foodAdjustment = result.adjustment;
+                    kebijakanLabel = result.label;
+                }
+            });
+
+            // Update UI Baris Kebijakan
+            const rowKebijakan = document.getElementById('row-kebijakan');
+            if (foodAdjustment !== 0) {
+                rowKebijakan.classList.remove('hidden');
+                document.getElementById('label-kebijakan').innerText = kebijakanLabel;
+                const valEl = document.getElementById('display-kebijakan-val');
+                valEl.innerText = (foodAdjustment > 0 ? "+" : "") + formatRupiah(foodAdjustment);
+                valEl.className = `font-bold ${foodAdjustment < 0 ? 'text-green-600' : 'text-red-600'}`;
+            }
+
+            const totalAkhir = subtotal + foodAdjustment + CONFIG.SHIPPING;
+
+            // Simpan Global untuk prosesBayar
+            window.currentTotal = Math.round(totalAkhir);
+            window.currentFoodAdjustment = Math.round(foodAdjustment);
+
+            document.getElementById('display-subtotal').innerText = formatRupiah(subtotal);
+            document.getElementById('display-total-akhir').innerText = formatRupiah(totalAkhir);
+            document.getElementById('modal-total-text').innerText = "Rp" + formatRupiah(totalAkhir);
+
+            const btnContainer = document.getElementById('modal-action-button');
+            if (saldoSaatIni < totalAkhir) {
+                btnContainer.innerHTML = `<button onclick="window.location.href='/topup'" class="bg-[#ffcc00] hover:bg-[#e6b800] text-black font-extrabold py-3 px-8 rounded-xl shadow-lg w-full">Top Up Saldo</button>`;
+            } else {
+                btnContainer.innerHTML = `<button onclick="prosesBayar()" class="bg-[#00880d] hover:bg-[#00700a] text-white font-extrabold py-3 px-8 rounded-xl shadow-lg w-full">Bayar Sekarang</button>`;
+            }
+        }
+
+        function toggleModal(show) {
+            document.getElementById('payment-modal').classList.toggle('hidden', !show);
+        }
+
         function prosesBayar() {
-            // Ambil saldo terbaru dari storage
-            let saldoSaatIni = parseInt(localStorage.getItem('gofood_saldo')) || 60000;
+            const saldoSaatIni = parseInt(localStorage.getItem('gofood_saldo')) || 60000;
 
             if (window.currentTotal > saldoSaatIni) {
                 alert("Maaf, saldo Anda tidak cukup!");
@@ -209,37 +222,28 @@
                 return;
             }
 
-            // --- Kumpulkan semua data ---
+            // Ambil data pendukung dari localStorage (Snippet 1)
             const cart = JSON.parse(localStorage.getItem('gofood_cart')) || {};
             const topUpNominal = parseInt(localStorage.getItem('top_up_nominal')) || 0;
-
-            // Hitung waktu elapsed
             const now = Date.now();
             const timeCasePresStart = parseInt(localStorage.getItem('time_case_pres_start')) || now;
             const timeAllStart = parseInt(localStorage.getItem('time_all_start')) || now;
-            const timeCasePres = formatElapsedTime(now - timeCasePresStart);
-            const timeAll = formatElapsedTime(now - timeAllStart);
 
-            // Hitung ulang pajak & subsidi dari data cart
-            let subtotal = 0;
-            if (cart.makanan && cart.makanan.price) subtotal += cart.makanan.price;
-            if (cart.minuman && cart.minuman.price) subtotal += cart.minuman.price;
-            const pajak = Math.round(subtotal * 0.05);
-
-            // Siapkan payload
+            // Susun Payload Gabungan
             const payload = {
                 saldo: saldoSaatIni,
                 menu_makanan: cart.makanan ? parseInt(cart.makanan.id) : 0,
                 menu_minuman: cart.minuman ? parseInt(cart.minuman.id) : 0,
-                subsidi_insentif: 0,
-                pajak: pajak,
-                total: Math.round(window.currentTotal),
+                subsidi_insentif: window.currentFoodAdjustment < 0 ? Math.abs(window.currentFoodAdjustment) : 0,
+                pajak: window.currentFoodAdjustment > 0 ? window.currentFoodAdjustment : 0,
+                total: window.currentTotal,
                 top_up: topUpNominal,
-                time_case_pres: timeCasePres,
-                time_all: timeAll,
+                time_case_pres: formatElapsedTime(now - timeCasePresStart),
+                time_all: formatElapsedTime(now - timeAllStart),
+                plotting: PLOTTING_DATA.plotting_code
             };
 
-            // --- Kirim AJAX POST ke server ---
+            // Kirim AJAX ke server
             fetch('/proses-bayar', {
                 method: 'POST',
                 headers: {
@@ -249,25 +253,22 @@
                 },
                 body: JSON.stringify(payload),
             })
-            .then(response => response.json())
+            .then(res => res.json())
             .then(data => {
                 if (data.success) {
-                    // Potong Saldo
-                    const sisaSaldo = saldoSaatIni - window.currentTotal;
-                    localStorage.setItem('gofood_saldo', sisaSaldo);
-
-                    // Bersihkan data
+                    // Potong Saldo & Bersihkan Cart (Snippet 1)
+                    localStorage.setItem('gofood_saldo', saldoSaatIni - window.currentTotal);
                     localStorage.removeItem('gofood_cart');
-
+                    
                     alert("Pembayaran Berhasil! Pesanan sedang diproses.");
                     window.location.href = "/thankyou";
                 } else {
-                    alert("Gagal menyimpan data: " + (data.message || 'Terjadi kesalahan.'));
+                    alert("Gagal: " + (data.message || 'Terjadi kesalahan.'));
                 }
             })
-            .catch(error => {
-                console.error('Error:', error);
-                alert("Terjadi kesalahan jaringan. Silakan coba lagi.");
+            .catch(err => {
+                console.error('Error:', err);
+                alert("Terjadi kesalahan jaringan.");
             });
         }
     </script>

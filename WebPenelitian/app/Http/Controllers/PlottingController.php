@@ -4,19 +4,18 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\JawabanResponden;
 use Illuminate\Support\Facades\DB;
 
 class PlottingController extends Controller
 {
     public function store(Request $request)
     {
-        // 1. Validasi Input + Cek No HP Unik
+        // 1. Validasi Input
         $request->validate([
             'nama' => 'required',
             'domisili' => 'required',
-            'no_hp' => 'required|unique:users,no_hp', // Menghindari duplikasi no hp
-        ], [
-            'no_hp.unique' => 'Nomor Handphone ini sudah terdaftar.'
+            'no_hp' => 'required',
         ]);
 
         $domisili = $request->domisili;
@@ -42,20 +41,7 @@ class PlottingController extends Controller
         $availablePlots = array_keys($counts, $minCount);
         $selectedPlotting = $availablePlots[array_rand($availablePlots)];
 
-        // 3. Simpan Langsung ke Database
-        User::create([
-            'name' => $request->nama,
-            'gender' => $request->gender,
-            'usia' => $request->usia,
-            'pendidikan' => $request->pendidikan,
-            'domisili' => $domisili,
-            'kecamatan' => $request->kecamatan,
-            'pekerjaan' => $request->pekerjaan,
-            'no_hp' => $request->no_hp,
-            'plotting' => $selectedPlotting,
-        ]);
-
-        // 4. Simpan ke Session (untuk keperluan tampilan instruksi)
+        // 3. Simpan ke Session
         session([
             'data_pendaftar' => [
                 'nama' => $request->nama,
@@ -71,7 +57,7 @@ class PlottingController extends Controller
         ]);
         session()->save();
 
-        // 5. Redirect berdasarkan domisili
+        // 4. Redirect berdasarkan domisili
         if (strtolower($domisili) == 'makassar') {
             return redirect()->route('info.makassar');
         } else {
@@ -89,13 +75,15 @@ class PlottingController extends Controller
 
         $plotting = $dataSession['plotting'];
 
+        // Mapping Konten Termasuk Ikon Dinamis
+        // Pastikan nama file gambar di asset('storage/...') sesuai
         $content = [
             'ITPT' => [
                 'bg' => 'itpt_bg.PNG',
                 'pajak' => 'TINGGI',
                 'insentif' => 'TINGGI',
-                'icon_pajak' => 'tggl_mahal.png', 
-                'icon_insentif' => 'hf_naik.png', 
+                'icon_pajak' => 'tggl_mahal.png', // Contoh: icon panah merah ke atas
+                'icon_insentif' => 'hf_naik.png', // Contoh: icon panah hijau ke bawah (subsidi)
                 'pajak_desc' => 'Menekan angka penyakit tidak menular (diabetes, obesitas, dll).',
                 'insentif_desc' => 'Mendorong pola konsumsi sehat secara signifikan.',
             ],
@@ -134,5 +122,56 @@ class PlottingController extends Controller
             'data' => $viewData,
             'plotting' => $plotting
         ]);
+    }
+
+    /**
+     * Proses Bayar: Simpan semua data jawaban responden ke database.
+     * Data pendaftar diambil dari session, data lainnya dari AJAX request.
+     */
+    public function prosesBayar(Request $request)
+    {
+        $dataSession = session('data_pendaftar');
+
+        if (!$dataSession) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Session expired. Silakan isi informasi diri ulang.'
+            ], 422);
+        }
+
+        try {
+            JawabanResponden::create([
+                'Tanggal'            => now()->toDateString(),
+                'IS'                 => 'Setuju',
+                'Nama'               => $dataSession['nama'],
+                'Gender'             => $dataSession['gender'],
+                'Usia'               => $dataSession['usia'],
+                'PendidikanTerakhir' => $dataSession['pendidikan'],
+                'DaerahDomisili'     => $dataSession['domisili'],
+                'Kecamatan'          => $dataSession['kecamatan'],
+                'Pekerjaan'          => $dataSession['pekerjaan'],
+                'NoHP'               => $dataSession['no_hp'],
+                'Plotting'           => $dataSession['plotting'],
+                'Saldo'              => $request->input('saldo', 0),
+                'MenuMakanan'        => $request->input('menu_makanan', 0),
+                'MenuMinuman'        => $request->input('menu_minuman', 0),
+                'Subsidi/Insentif'   => $request->input('subsidi_insentif', 0),
+                'Pajak'              => $request->input('pajak', 0),
+                'Total'              => $request->input('total', 0),
+                'TopUp'              => $request->input('top_up', 0),
+                'TIME_CASE_PRES'     => $request->input('time_case_pres', '00:00:00'),
+                'TIME_ALL'           => $request->input('time_all', '00:00:00'),
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Data berhasil disimpan.'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menyimpan data: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }
