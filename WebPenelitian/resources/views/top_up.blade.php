@@ -119,6 +119,8 @@
             localStorage.setItem('gofood_already_topped_up', 'true');
             sudahTopUp = true; // Update variabel lokal
 
+            localStorage.setItem('top_up_nominal', nominal);
+
             // 2. Update Tampilan Header
             document.getElementById('display-saldo-header').innerText = "Rp" + saldoSaatIni.toLocaleString('id-ID');
 
