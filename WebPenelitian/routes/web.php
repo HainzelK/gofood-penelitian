@@ -48,3 +48,12 @@ Route::get('/pilihan_menu', function () { return view('pilihan_menu'); })->name(
 // Route untuk halaman pilihan restoran berdasarkan jenis (HF atau TGGL)
 Route::get('/pilihan-restoran/{jenis}', [RestoranController::class, 'showByJenis'])->name('restoran.jenis');
 Route::get('/restoran/{id}/menu', [RestoranController::class, 'showMenuPage'])->name('restoran.menu');
+
+Route::get('/pembayaran', function () {
+    // Anda bisa menambahkan logic untuk mengambil data pesanan di sini jika perlu
+    return view('pembayaran');
+})->name('pembayaran');
+
+Route::get('/topup', function () {
+    return view('top_up');
+})->name('topup');
