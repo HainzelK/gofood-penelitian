@@ -3,49 +3,35 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RestoranController;
+use App\Http\Controllers\PlottingController; 
 
-// Restaurant and Menu API Routes
+// 1. Restaurant and Menu API Routes (TETAP)
 Route::get('/restaurants', [RestoranController::class, 'index'])->name('restaurants.index');
 Route::get('/restaurants/{id}/menus', [RestoranController::class, 'showMenus'])->name('restaurants.menus');
 
-// Halaman 1 & 2 tetap sama...
+// 2. Halaman Awal & Informasi Diri (TETAP)
 Route::get('/consent', function () { return view('consent'); })->name('consent');
 Route::get('/informasi-diri', function () { return view('informasi_diri'); })->name('informasi.diri');
 
-// PROSES SIMPAN DOMISILI
-Route::post('/simpan-informasi', function (Request $request) {
-    // Simpan pilihan domisili ke dalam session
-    session(['domisili' => $request->domisili]);
-    
-    // Pindah ke halaman instruksi
-    return redirect()->route('instruksi');
-})->name('simpan.informasi');
+// 3. PROSES SIMPAN + LOGIKA PLOTTING (UPDATE: Langsung Redirect ke Info Umum)
+// Di dalam PlottingController@store nanti harus redirect ke 'info.makassar' atau 'info.toraja'
+Route::post('/simpan-informasi', [PlottingController::class, 'store'])->name('simpan.informasi');
 
-// Halaman 3: Instruksi Pengerjaan
-Route::get('/instruksi', function () {
-    return view('instruksi');
-})->name('instruksi');
+// 4. Halaman Khusus Daerah / Info Umum (TETAP)
+Route::get('/informasi_umum_toraja', function () { return view('informasi_umum_toraja'); })->name('info.toraja');
+Route::get('/informasi_umum_makassar', function () { return view('informasi_umum_makassar'); })->name('info.makassar');
 
-// PROSES FILTERING HALAMAN (Logika Mulai)
-Route::get('/mulai-simulasi', function () {
-    $domisili = session('domisili');
+// 5. REDIRECT KE INSTRUKSI KHUSUS PLOTTING (UPDATE: Tombol "Lanjut" dari Info Umum lari ke sini)
+// showPlotting akan mengembalikan view instruksi sesuai plotting user (itpt, irpt, dll)
+Route::get('/detail-plotting', [PlottingController::class, 'showPlotting'])->name('detail.plotting');
 
-    if ($domisili == 'Toraja') {
-        return redirect('informasi_umum_toraja');
-    } elseif ($domisili == 'Makassar') {
-        return redirect('informasi_umum_makassar');
-    }
-    
-    return redirect('/informasi-diri'); // Balik jika session hilang
-})->name('mulai.simulasi');
+// Halaman Step 3 (Konstan)
+Route::get('/instruksi_3', function () {
+    return view('instruksi_3');
+})->name('instruksi.3');
 
-// Halaman Khusus Daerah (Contoh Halaman Kosong)
-Route::get('/informasi_umum_toraja', function () { return view('informasi_umum_toraja'); });
-Route::get('/informasi_umum_makassar', function () { return view('informasi_umum_makassar'); });
-
-Route::get('/pilihan_menu', function () { return view('pilihan_menu'); })->name('pilihan.menu');
-
-// Route untuk halaman pilihan restoran berdasarkan jenis (HF atau TGGL)
+// 6. Halaman Restoran & Menu (TETAP)
+Route::get('/pilihan_menu', function () { return view('pilihan_menu'); })->name('pilihan.menu');    
 Route::get('/pilihan-restoran/{jenis}', [RestoranController::class, 'showByJenis'])->name('restoran.jenis');
 Route::get('/restoran/{id}/menu', [RestoranController::class, 'showMenuPage'])->name('restoran.menu');
 
