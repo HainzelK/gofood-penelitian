@@ -53,5 +53,9 @@
         
     </main>
 
+    <script>
+        // Start TIME_CASE_PRES timer (waktu sejak masuk informasi umum)
+        localStorage.setItem('time_case_pres_start', Date.now().toString());
+    </script>
 </body>
 </html>

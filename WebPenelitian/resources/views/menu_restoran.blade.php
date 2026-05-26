@@ -183,17 +183,17 @@
         window.addEventListener('pageshow', function(event) {
             updateHeaderSaldo();
         });
-    
+
         // Kita buat fungsi terpisah agar bisa dipanggil kapan saja
         function updateHeaderSaldo() {
             const saldoHeader = document.getElementById('display-saldo-header');
             if (saldoHeader) {
                 // Ambil saldo terbaru dari localStorage
                 const currentSaldo = parseInt(localStorage.getItem('gofood_saldo')) || 60000;
-                
+
                 // Update teks di header
                 saldoHeader.innerText = "Rp" + currentSaldo.toLocaleString('id-ID');
-                
+
                 console.log("Saldo diupdate otomatis:", currentSaldo);
             }
         }
@@ -311,8 +311,8 @@
             // 1. Cek apakah ada data di cartState
             console.log("Data yang akan disimpan:", cartState);
                 
-            if (!cartState.makanan && !cartState.minuman) {
-                alert("Silakan pilih menu terlebih dahulu!");
+            if (!cartState.makanan) {
+                alert("Silakan pilih makanan terlebih dahulu!");
                 return;
             }
         

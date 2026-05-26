@@ -43,3 +43,10 @@ Route::get('/pembayaran', function () {
 Route::get('/topup', function () {
     return view('top_up');
 })->name('topup');
+
+// 7. PROSES BAYAR: Simpan jawaban responden ke database
+Route::post('/proses-bayar', [PlottingController::class, 'prosesBayar'])->name('proses.bayar');
+
+Route::get('/thankyou', function () {
+    return view('thankyou');
+})->name('thankyou');

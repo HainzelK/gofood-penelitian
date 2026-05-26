@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ringkasan Pembayaran - Go-Food</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -172,7 +173,7 @@
             } else {
                 // Jika saldo cukup, tampilkan tombol Bayar
                 btnContainer.innerHTML = `
-                    <button onclick="toggleModal(true)" class="bg-[#00880d] hover:bg-[#00700a] text-white font-extrabold py-3 px-8 rounded-xl shadow-lg transition-all w-full md:w-auto">
+                    <button onclick="prosesBayar()" class="bg-[#00880d] hover:bg-[#00700a] text-white font-extrabold py-3 px-8 rounded-xl shadow-lg transition-all w-full md:w-auto">
                         Bayar & Proses Pengantaran
                     </button>
                 `;
@@ -184,6 +185,20 @@
             if(modal) modal.classList.toggle('hidden', !show);
         }
 
+        // Helper: Konversi milidetik ke format HH:MM:SS
+        function formatElapsedTime(ms) {
+            if (!ms || ms <= 0) return '00:00:00';
+            let totalSeconds = Math.floor(ms / 1000);
+            let hours = Math.floor(totalSeconds / 3600);
+            let minutes = Math.floor((totalSeconds % 3600) / 60);
+            let seconds = totalSeconds % 60;
+            return [
+                String(hours).padStart(2, '0'),
+                String(minutes).padStart(2, '0'),
+                String(seconds).padStart(2, '0')
+            ].join(':');
+        }
+
         function prosesBayar() {
             // Ambil saldo terbaru dari storage
             let saldoSaatIni = parseInt(localStorage.getItem('gofood_saldo')) || 60000;
@@ -191,15 +206,69 @@
             if (window.currentTotal > saldoSaatIni) {
                 alert("Maaf, saldo Anda tidak cukup!");
                 window.location.href = "/topup";
-            } else {
-                // Potong Saldo
-                const sisaSaldo = saldoSaatIni - window.currentTotal;
-                localStorage.setItem('gofood_saldo', sisaSaldo);
-
-                alert("Pembayaran Berhasil! Pesanan sedang diproses.");
-                localStorage.removeItem('gofood_cart'); // Bersihkan keranjang
-                window.location.href = "/success-page"; // Sesuaikan route sukses Anda
+                return;
             }
+
+            // --- Kumpulkan semua data ---
+            const cart = JSON.parse(localStorage.getItem('gofood_cart')) || {};
+            const topUpNominal = parseInt(localStorage.getItem('top_up_nominal')) || 0;
+
+            // Hitung waktu elapsed
+            const now = Date.now();
+            const timeCasePresStart = parseInt(localStorage.getItem('time_case_pres_start')) || now;
+            const timeAllStart = parseInt(localStorage.getItem('time_all_start')) || now;
+            const timeCasePres = formatElapsedTime(now - timeCasePresStart);
+            const timeAll = formatElapsedTime(now - timeAllStart);
+
+            // Hitung ulang pajak & subsidi dari data cart
+            let subtotal = 0;
+            if (cart.makanan && cart.makanan.price) subtotal += cart.makanan.price;
+            if (cart.minuman && cart.minuman.price) subtotal += cart.minuman.price;
+            const pajak = Math.round(subtotal * 0.05);
+
+            // Siapkan payload
+            const payload = {
+                saldo: saldoSaatIni,
+                menu_makanan: cart.makanan ? parseInt(cart.makanan.id) : 0,
+                menu_minuman: cart.minuman ? parseInt(cart.minuman.id) : 0,
+                subsidi_insentif: 0,
+                pajak: pajak,
+                total: Math.round(window.currentTotal),
+                top_up: topUpNominal,
+                time_case_pres: timeCasePres,
+                time_all: timeAll,
+            };
+
+            // --- Kirim AJAX POST ke server ---
+            fetch('/proses-bayar', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify(payload),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Potong Saldo
+                    const sisaSaldo = saldoSaatIni - window.currentTotal;
+                    localStorage.setItem('gofood_saldo', sisaSaldo);
+
+                    // Bersihkan data
+                    localStorage.removeItem('gofood_cart');
+
+                    alert("Pembayaran Berhasil! Pesanan sedang diproses.");
+                    window.location.href = "/thankyou";
+                } else {
+                    alert("Gagal menyimpan data: " + (data.message || 'Terjadi kesalahan.'));
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert("Terjadi kesalahan jaringan. Silakan coba lagi.");
+            });
         }
     </script>
 </body>
