@@ -49,9 +49,9 @@
         </div>
 
         <!-- Tombol Selanjutnya (Kanan Bawah) -->
-        <div class="absolute bottom-10 right-10 z-20">
+        <div class="absolute bottom-10 left-0 right-0 md:left-auto md:right-10 flex justify-center md:block z-20">
             <a href="{{ route('pilihan.menu') }}" 
-               class="px-14 py-4 bg-[#00880d] text-white font-bold rounded-2xl hover:bg-[#00700a] transition-all text-xl shadow-2xl inline-block transform hover:scale-105 active:scale-95">
+               class="w-[85%] md:w-auto text-center px-12 py-4 bg-[#00880d] text-white font-bold rounded-2xl hover:bg-[#00700a] transition-all text-lg shadow-xl">
                 Selanjutnya
             </a>
         </div>

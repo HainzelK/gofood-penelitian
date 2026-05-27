@@ -96,7 +96,13 @@
     <script>
         window.addEventListener('pageshow', function(event) {
             updateHeaderSaldo();
+
+            clearCart()
         });
+
+        function clearCart() {
+            localStorage.removeItem('gofood_cart');
+        }
     
         // Kita buat fungsi terpisah agar bisa dipanggil kapan saja
         function updateHeaderSaldo() {

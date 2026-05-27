@@ -260,7 +260,7 @@
                     localStorage.setItem('gofood_saldo', saldoSaatIni - window.currentTotal);
                     localStorage.removeItem('gofood_cart');
                     
-                    alert("Pembayaran Berhasil! Pesanan sedang diproses.");
+                    // alert("Pembayaran Berhasil! Pesanan sedang diproses.");
                     window.location.href = "/thankyou";
                 } else {
                     alert("Gagal: " + (data.message || 'Terjadi kesalahan.'));

@@ -69,6 +69,7 @@
         // Saat sampai di halaman ini, pastikan data keranjang dihapus
         // Tapi kita tidak menghapus 'gofood_already_topped_up' di sini jika Anda ingin batasan tetap berlaku
         localStorage.removeItem('gofood_cart');
+        localStorage.removeItem('gofood_saldo');
         
         // Opsional: Hapus flag top up jika ingin simulasi bisa diulang di sesi berikutnya
         localStorage.removeItem('gofood_already_topped_up');
