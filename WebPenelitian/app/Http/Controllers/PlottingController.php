@@ -99,7 +99,7 @@ class PlottingController extends Controller
 
         $content = [
             'ITPT' => [
-                'bg' => 'itpt_bg.PNG',
+                'bg' => 'itpt_desktop.PNG',
                 'pajak' => 'TINGGI',
                 'insentif' => 'TINGGI',
                 'icon_pajak' => 'tggl_mahal.png', 
@@ -108,7 +108,7 @@ class PlottingController extends Controller
                 'insentif_desc' => 'Mendorong pola konsumsi sehat secara signifikan.',
             ],
             'IRPT' => [
-                'bg' => 'irpt_bg.PNG',
+                'bg' => 'irpt_desktop.PNG',
                 'pajak' => 'TINGGI',
                 'insentif' => 'RENDAH',
                 'icon_pajak' => 'tggl_mahal.png',
@@ -117,7 +117,7 @@ class PlottingController extends Controller
                 'insentif_desc' => 'Potongan harga diberikan secara terbatas.',
             ],
             'IRPR' => [
-                'bg' => 'irpr_bg.PNG',
+                'bg' => 'irpr_desktop.PNG',
                 'pajak' => 'RENDAH',
                 'insentif' => 'RENDAH',
                 'icon_pajak' => 'tggl_murah.png',
@@ -126,7 +126,7 @@ class PlottingController extends Controller
                 'insentif_desc' => 'Mendorong pola konsumsi sehat secara bertahap.',
             ],
             'ITPR' => [
-                'bg' => 'itpr_bg.PNG',
+                'bg' => 'itpr_desktop.PNG',
                 'pajak' => 'RENDAH',
                 'insentif' => 'TINGGI',
                 'icon_pajak' => 'tggl_murah.png',
