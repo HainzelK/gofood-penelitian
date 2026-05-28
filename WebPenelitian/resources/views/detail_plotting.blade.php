@@ -10,82 +10,75 @@
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
     </style>
 </head>
-<body class="bg-gray-100 min-h-screen flex flex-col overflow-hidden">
+<body class="bg-gray-100 h-screen flex flex-col overflow-hidden">
 
-    <!-- Header -->
-    <header class="bg-white py-3 shadow-sm border-b border-gray-100 flex justify-center sticky top-0 z-50">
-        <span class="text-[#00880d] font-bold text-xl tracking-tight">go-food.site</span>
+    <header class="bg-white py-2 shadow-sm border-b border-gray-100 flex justify-center flex-shrink-0">
+        <span class="text-[#00880d] font-bold text-lg tracking-tight">go-food.site</span>
     </header>
 
-    <main class="relative flex-grow flex items-center justify-center overflow-hidden">
-        
-        <!-- Background Dinamis -->
+    <main class="relative flex-grow flex items-center justify-center p-2 overflow-hidden">
+        <!-- Background -->
         <div class="absolute inset-0 z-0">
             <img src="{{ asset('storage/' . $data['bg']) }}" class="w-full h-full object-cover">
             <div class="absolute inset-0 bg-black/5"></div>
         </div>
 
-        <!-- Sidebar Panel Dinamis -->
-        <div class="absolute left-4 md:left-10 top-6 bottom-6 w-[90%] md:w-[350px] bg-white/95 backdrop-blur-md rounded-[2.5rem] shadow-2xl p-7 overflow-y-auto z-10 border border-gray-100">
+        <!-- Sidebar Panel Dinamis (Ukuran dipadatkan agar tidak scroll) -->
+        <div class="relative z-10 w-full max-w-[340px] md:max-w-[380px] bg-white/95 backdrop-blur-md rounded-[2rem] shadow-2xl p-4 md:p-6 border border-gray-100 flex flex-col max-h-[90vh]">
             
-            <!-- Step 2 Badge -->
-            <div class="flex items-start gap-4 mb-6">
-                <div class="bg-[#4a1d1d] text-white w-9 h-9 flex-shrink-0 flex items-center justify-center rounded-lg font-bold text-xl">2</div>
-                <p class="text-[14px] font-medium leading-tight text-gray-800">
-                    Anda baru sampai di kantor dan melihat berita di TV tentang kebijakan baru pemerintah.
+            <div class="flex items-start gap-3 mb-3">
+                <div class="bg-[#4a1d1d] text-white w-7 h-7 flex-shrink-0 flex items-center justify-center rounded-lg font-bold text-base">2</div>
+                <p class="text-[12px] md:text-[13px] font-medium leading-tight text-gray-800">
+                    Melihat berita di TV tentang kebijakan baru pemerintah.
                 </p>
             </div>
 
-            <!-- Judul Skenario -->
-            <h2 class="text-[#b01e1e] font-extrabold text-lg leading-tight mb-6 uppercase">
-                Pemerintah menjalankan program "Masyarakat Sehat, Ekonomi Kuat"
+            <h2 class="text-[#b01e1e] font-extrabold text-[14px] md:text-[16px] leading-tight mb-3 uppercase text-center">
+                PROGRAM "MASYARAKAT SEHAT, EKONOMI KUAT"
             </h2>
 
-            <div class="space-y-5">
+            <div class="space-y-3 flex-grow overflow-hidden">
                 <!-- Kebijakan 1: PAJAK -->
-                <div class="border-2 border-blue-900 rounded-2xl p-4 bg-white shadow-sm">
-                    <h3 class="bg-[#1e40af] text-white text-center font-bold py-1.5 rounded-lg text-sm mb-3 uppercase tracking-wide">
+                <div class="border-2 border-blue-900 rounded-xl p-3 bg-white shadow-sm">
+                    <h3 class="bg-[#1e40af] text-white text-center font-bold py-1 rounded-lg text-[11px] mb-2 uppercase">
                         1. PAJAK {{ $data['pajak'] }}
                     </h3>
-                    <div class="flex gap-4 items-center">
-                        <!-- Ikon Pajak Dinamis -->
-                        <img src="{{ asset('storage/' . $data['icon_pajak']) }}" class="w-14 h-14 object-contain">
-                        <p class="text-[14px] leading-tight text-gray-900 font-large">
-                            Pajak makanan kadar gula, garam, dan lemak tinggi berlaku <span class="font-bold text-blue-700 uppercase">{{ $data['pajak'] }}</span>.
+                    <div class="flex gap-3 items-center">
+                        <img src="{{ asset('storage/' . $data['icon_pajak']) }}" class="w-10 h-10 object-contain">
+                        <p class="text-[11px] leading-tight text-gray-900 font-medium">
+                            Pajak junk food berlaku <span class="font-bold text-blue-700">{{ $data['pajak'] }}</span>.
                         </p>
                     </div>
-                    <p class="text-[12px] mt-3 text-gray-600 bg-gray-50 p-2 rounded-lg italic">
+                    <p class="text-[10px] mt-1 text-gray-600 bg-gray-50 p-1 rounded italic leading-tight">
                         <b>TUJUAN:</b> {{ $data['pajak_desc'] }}
                     </p>
                 </div>
 
                 <!-- Kebijakan 2: INSENTIF -->
-                <div class="border-2 border-green-800 rounded-2xl p-4 bg-white shadow-sm">
-                    <h3 class="bg-[#166534] text-white text-center font-bold py-1.5 rounded-lg text-sm mb-3 uppercase tracking-wide">
+                <div class="border-2 border-green-800 rounded-xl p-3 bg-white shadow-sm">
+                    <h3 class="bg-[#166534] text-white text-center font-bold py-1 rounded-lg text-[11px] mb-2 uppercase">
                         2. INSENTIF {{ $data['insentif'] }}
                     </h3>
-                    <div class="flex gap-4 items-center">
-                        <!-- Ikon Insentif Dinamis -->
-                        <img src="{{ asset('storage/' . $data['icon_insentif']) }}" class="w-14 h-14 object-contain">
-                        <p class="text-[14px] leading-tight text-gray-900 font-large">
-                            Insentif (potongan harga) untuk menu sehat diberikan <span class="font-bold text-green-700 uppercase">{{ $data['insentif'] }}</span>.
+                    <div class="flex gap-3 items-center">
+                        <img src="{{ asset('storage/' . $data['icon_insentif']) }}" class="w-10 h-10 object-contain">
+                        <p class="text-[11px] leading-tight text-gray-900 font-medium">
+                            Insentif menu sehat diberikan <span class="font-bold text-green-700">{{ $data['insentif'] }}</span>.
                         </p>
                     </div>
-                    <p class="text-[12px] mt-3 text-gray-600 bg-gray-50 p-2 rounded-lg italic">
+                    <p class="text-[10px] mt-1 text-gray-600 bg-gray-50 p-1 rounded italic leading-tight">
                         <b>TUJUAN:</b> {{ $data['insentif_desc'] }}
                     </p>
                 </div>
             </div>
-        </div>
 
-        <!-- Tombol Selanjutnya -->
-        <div class="absolute bottom-10 left-0 right-0 md:left-auto md:right-10 flex justify-center md:block z-20">
-            <a href="{{ route('instruksi.3') }}" 
-               class="w-[85%] md:w-auto text-center px-12 py-4 bg-[#00880d] text-white font-bold rounded-2xl hover:bg-[#00700a] transition-all text-lg shadow-xl">
-                Selanjutnya
-            </a>
+            <!-- Tombol dipindahkan ke dalam box agar hemat tempat di mobile -->
+            <div class="mt-4">
+                <a href="{{ route('instruksi.3') }}" 
+                   class="block w-full text-center py-3 bg-[#00880d] text-white font-bold rounded-xl hover:bg-[#00700a] text-base shadow-lg transition-transform active:scale-95">
+                    Selanjutnya
+                </a>
+            </div>
         </div>
     </main>
-
 </body>
 </html>
