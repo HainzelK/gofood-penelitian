@@ -59,6 +59,8 @@
     <script>
         window.addEventListener('pageshow', function(event) {
             updateHeaderSaldo();
+
+            clearCart();
         });
     
         function updateHeaderSaldo() {
@@ -68,7 +70,11 @@
                 saldoHeader.innerText = "Rp" + currentSaldo.toLocaleString('id-ID');
             }
         }
-        updateHeaderSaldo(); // Jalankan sekali saat load
+        updateHeaderSaldo();
+
+        function clearCart() {
+            localStorage.removeItem('gofood_cart');
+        }
     </script>
 
 </body>

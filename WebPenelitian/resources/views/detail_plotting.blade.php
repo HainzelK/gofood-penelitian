@@ -31,7 +31,7 @@
             <!-- Step 2 Badge -->
             <div class="flex items-start gap-4 mb-6">
                 <div class="bg-[#4a1d1d] text-white w-9 h-9 flex-shrink-0 flex items-center justify-center rounded-lg font-bold text-xl">2</div>
-                <p class="text-[13px] font-medium leading-tight text-gray-800">
+                <p class="text-[14px] font-medium leading-tight text-gray-800">
                     Anda baru sampai di kantor dan melihat berita di TV tentang kebijakan baru pemerintah.
                 </p>
             </div>
@@ -50,11 +50,11 @@
                     <div class="flex gap-4 items-center">
                         <!-- Ikon Pajak Dinamis -->
                         <img src="{{ asset('storage/' . $data['icon_pajak']) }}" class="w-14 h-14 object-contain">
-                        <p class="text-[11px] leading-tight text-gray-900 font-medium">
+                        <p class="text-[14px] leading-tight text-gray-900 font-large">
                             Pajak makanan kadar gula, garam, dan lemak tinggi berlaku <span class="font-bold text-blue-700 uppercase">{{ $data['pajak'] }}</span>.
                         </p>
                     </div>
-                    <p class="text-[10px] mt-3 text-gray-600 bg-gray-50 p-2 rounded-lg italic">
+                    <p class="text-[12px] mt-3 text-gray-600 bg-gray-50 p-2 rounded-lg italic">
                         <b>TUJUAN:</b> {{ $data['pajak_desc'] }}
                     </p>
                 </div>
@@ -67,11 +67,11 @@
                     <div class="flex gap-4 items-center">
                         <!-- Ikon Insentif Dinamis -->
                         <img src="{{ asset('storage/' . $data['icon_insentif']) }}" class="w-14 h-14 object-contain">
-                        <p class="text-[11px] leading-tight text-gray-900 font-medium">
+                        <p class="text-[14px] leading-tight text-gray-900 font-large">
                             Insentif (potongan harga) untuk menu sehat diberikan <span class="font-bold text-green-700 uppercase">{{ $data['insentif'] }}</span>.
                         </p>
                     </div>
-                    <p class="text-[10px] mt-3 text-gray-600 bg-gray-50 p-2 rounded-lg italic">
+                    <p class="text-[12px] mt-3 text-gray-600 bg-gray-50 p-2 rounded-lg italic">
                         <b>TUJUAN:</b> {{ $data['insentif_desc'] }}
                     </p>
                 </div>
@@ -79,9 +79,9 @@
         </div>
 
         <!-- Tombol Selanjutnya -->
-        <div class="absolute bottom-10 right-10 z-20">
+        <div class="absolute bottom-10 left-0 right-0 md:left-auto md:right-10 flex justify-center md:block z-20">
             <a href="{{ route('instruksi.3') }}" 
-               class="px-14 py-4 bg-[#00880d] text-white font-bold rounded-2xl hover:bg-[#00700a] transition-all text-xl shadow-2xl inline-block transform hover:scale-105 active:scale-95">
+               class="w-[85%] md:w-auto text-center px-12 py-4 bg-[#00880d] text-white font-bold rounded-2xl hover:bg-[#00700a] transition-all text-lg shadow-xl">
                 Selanjutnya
             </a>
         </div>

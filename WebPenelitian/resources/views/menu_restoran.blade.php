@@ -307,6 +307,10 @@
             }
         }
 
+        function back() {
+            localStorage.removeItem('gofood_cart');
+        }
+
         function confirmOrder() {
             // 1. Cek apakah ada data di cartState
             console.log("Data yang akan disimpan:", cartState);

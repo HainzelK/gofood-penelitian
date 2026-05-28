@@ -9,13 +9,22 @@ use Illuminate\Support\Facades\DB;
 
 class PlottingController extends Controller
 {
-public function store(Request $request)
+    public function store(Request $request)
     {
+        // Hilangkan spasi pada no_hp sebelum divalidasi
+        if ($request->has('no_hp')) {
+            $request->merge([
+                'no_hp' => str_replace(' ', '', $request->no_hp)
+            ]);
+        }
+
         // 1. Validasi Input
         $request->validate([
             'nama' => 'required',
             'domisili' => 'required',
-            'no_hp' => 'required',
+            'no_hp' => 'required|unique:users,no_hp', // Menghindari duplikasi no hp
+        ], [
+            'no_hp.unique' => 'Nomor Handphone ini sudah terdaftar.'
         ]);
 
         $domisili = $request->domisili;
