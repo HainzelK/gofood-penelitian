@@ -13,16 +13,26 @@
 <body class="bg-[#f2f8f2] min-h-screen flex flex-col">
 
     <!-- Header -->
+<!-- Header -->
     <header class="bg-white py-3 px-4 shadow-sm border-b border-gray-100 sticky top-0 z-50">
-        <div class="max-w-6xl mx-auto flex justify-between items-center gap-2">
-            <!-- Logo -->
-            <span class="text-[#00880d] font-bold text-base md:text-xl tracking-tight truncate">go-food.site</span>
+        <div class="max-w-6xl mx-auto flex items-center justify-between">
             
-            <!-- Saldo -->
-            <div class="relative border border-[#00880d] rounded-xl px-3 py-1 bg-white min-w-[90px] md:min-w-[130px]">
-                <span class="font-bold absolute -top-2 right-3 bg-white px-1 text-[8px] md:text-[10px] text-[#00880d] uppercase whitespace-nowrap">Saldo Anda</span>
-                <span id="display-saldo-header" class="text-xs md:text-lg font-bold text-gray-800 block text-right">Rp60,000</span>
+            <!-- Sisi Kiri (Kosong agar logo tetap di tengah) -->
+            <div class="flex-1"></div>
+
+            <!-- Logo (Pasti di Tengah) -->
+            <div class="flex-grow flex justify-center">
+                <span class="text-[#00880d] font-bold text-base md:text-xl tracking-tight truncate">go-food.site</span>
             </div>
+            
+            <!-- Saldo (Sisi Kanan) -->
+            <div class="flex-1 flex justify-end">
+                <div class="relative border border-[#00880d] rounded-xl px-3 py-1 bg-white min-w-[90px] md:min-w-[130px]">
+                    <span class="font-bold absolute -top-2 right-3 bg-white px-1 text-[8px] md:text-[10px] text-[#00880d] uppercase whitespace-nowrap">Saldo Anda</span>
+                    <span id="display-saldo-header" class="text-xs md:text-lg font-bold text-gray-800 block text-right">Rp60,000</span>
+                </div>
+            </div>
+            
         </div>
     </header>
 

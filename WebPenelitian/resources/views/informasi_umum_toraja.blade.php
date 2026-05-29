@@ -12,9 +12,8 @@
 </head>
 <body class="bg-white min-h-screen flex flex-col overflow-hidden">
 
-    <!-- Header dengan tinggi tetap (64px) -->
-    <header class="h-16 bg-white border-b border-gray-100 flex items-center justify-center z-50 flex-shrink-0">
-        <span class="text-[#00880d] font-bold text-xl tracking-tight">go-food.site</span>
+    <header class="bg-white py-2 shadow-sm border-b border-gray-100 flex justify-center flex-shrink-0">
+        <span class="text-[#00880d] font-bold text-lg tracking-tight">go-food.site</span>
     </header>
 
     <!-- Main Container: Mengisi sisa layar -->

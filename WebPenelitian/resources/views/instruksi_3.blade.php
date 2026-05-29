@@ -13,8 +13,8 @@
 <body class="bg-gray-100 min-h-screen flex flex-col overflow-hidden">
 
     <!-- Header -->
-    <header class="bg-white py-3 shadow-sm border-b border-gray-100 flex justify-center sticky top-0 z-50">
-        <span class="text-[#00880d] font-bold text-xl tracking-tight">go-food.site</span>
+    <header class="bg-white py-2 shadow-sm border-b border-gray-100 flex justify-center flex-shrink-0">
+        <span class="text-[#00880d] font-bold text-lg tracking-tight">go-food.site</span>
     </header>
 
     <main class="relative flex-grow flex items-center justify-center overflow-hidden">
@@ -22,7 +22,7 @@
         <!-- Background Image (Gambar Orang Pegang HP) -->
         <div class="absolute inset-0 z-0">
             <!-- Gambar Desktop -->
-            <img src="{{ asset('storage/instruksi3.PNG') }}" 
+            <img src="{{ asset('storage/instruksi3-desktop-.PNG') }}" 
                  alt="Desktop" 
                  class="hidden md:block w-full h-full object-cover object-top">
             
