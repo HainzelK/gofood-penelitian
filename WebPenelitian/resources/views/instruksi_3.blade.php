@@ -22,7 +22,7 @@
         <!-- Background Image (Gambar Orang Pegang HP) -->
         <div class="absolute inset-0 z-0">
             <!-- Gambar Desktop -->
-            <img src="{{ asset('storage/instruksi3-desktop.PNG') }}" 
+            <img src="{{ asset('storage/instruksi3-desktop-.PNG') }}" 
                  alt="Desktop" 
                  class="hidden md:block w-full h-full object-cover object-top">
             
