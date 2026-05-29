@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Buka Aplikasi Go-Food</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
@@ -12,30 +13,54 @@
 </head>
 <body class="bg-gray-100 min-h-screen flex flex-col overflow-hidden">
 
-    <!-- Header -->
-    <header class="bg-white py-2 shadow-sm border-b border-gray-100 flex justify-center flex-shrink-0">
-        <span class="text-[#00880d] font-bold text-lg tracking-tight">go-food.site</span>
+        <!-- Header -->
+    <header class="bg-white py-3 px-4 md:px-6 shadow-sm border-b border-gray-100 sticky top-0 z-50 flex-shrink-0">
+        <div class="max-w-7xl mx-auto flex justify-between items-center w-full">
+            <div class="w-12 md:w-24">
+                <a href="javascript:history.back()" class="inline-flex items-center justify-center w-10 h-10 bg-[#ffcc00] rounded-xl shadow-sm hover:bg-[#e6b800] transition-transform active:scale-95 text-black">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+            </div>
+            <span class="text-[#00880d] font-bold text-lg md:text-xl tracking-tight text-center flex-1 md:flex-none">go-food.site</span>
+            <div class="min-w-[100px] md:min-w-[130px]"></div>
+        </div>
     </header>
 
     <main class="relative flex-grow flex items-center justify-center overflow-hidden">
         
         <!-- Background Image (Gambar Orang Pegang HP) -->
         <div class="absolute inset-0 z-0">
-            <!-- Gambar Desktop -->
-            <img src="{{ asset('storage/instruksi3-desktop-.PNG') }}" 
-                 alt="Desktop" 
-                 class="hidden md:block w-full h-full object-cover object-top">
-            
-            <!-- Gambar HP -->
-            <img src="{{ asset('storage/phone_instruksi3.jpeg') }}" 
-                 alt="Mobile" 
-                 class="block md:hidden w-full h-full object-cover object-top">
+            @php
+                $domisili = strtolower(session('data_pendaftar.domisili', 'toraja'));
+            @endphp
+
+            @if($domisili == 'makassar')
+                <!-- Gambar Desktop -->
+                <img src="{{ asset('storage/instruksi3-desktop-makassar.jpeg') }}" 
+                     alt="Desktop" 
+                     class="hidden md:block w-full h-full object-cover object-top">
+                
+                <!-- Gambar HP -->
+                <img src="{{ asset('storage/phone_instruksi3_makassar.jpeg') }}" 
+                     alt="Mobile" 
+                     class="block md:hidden w-full h-full object-cover object-top">
+            @else
+                <!-- Gambar Desktop -->
+                <img src="{{ asset('storage/instruksi3-desktop-toraja.PNG') }}" 
+                     alt="Desktop" 
+                     class="hidden md:block w-full h-full object-cover object-top">
+                
+                <!-- Gambar HP -->
+                <img src="{{ asset('storage/phone_instruksi3_toraja.png') }}" 
+                     alt="Mobile" 
+                     class="block md:hidden w-full h-full object-cover object-top">
+            @endif
             
             <div class="absolute inset-0 bg-black/10"></div>
         </div>
 
-        <!-- Sidebar Panel (Kiri) -->
-        <div class="absolute left-4 md:left-10 top-10 md:top-20 w-[90%] md:w-[320px] bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl p-6 z-10 border border-gray-100">
+        <!-- Sidebar Panel -->
+        <div class="absolute left-4 {{ $domisili == 'makassar' ? 'md:left-auto md:right-10' : 'md:left-10' }} top-10 md:top-20 w-[90%] md:w-[320px] bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl p-6 z-10 border border-gray-100">
             
             <div class="flex items-start gap-4">
                 <!-- Badge Angka 3 -->
