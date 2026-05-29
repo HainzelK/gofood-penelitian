@@ -175,7 +175,22 @@
         </div>
     </div>
 
+    <!-- ALERT MODAL OVERLAY -->
+    <div id="alert-modal-overlay" class="hidden fixed inset-0 bg-black/60 z-[130] backdrop-blur-sm transition-opacity" onclick="closeAlertModal()"></div>
 
+    <!-- ALERT MODAL CONTENT -->
+    <div id="alert-popup" class="hidden fixed inset-0 z-[140] flex items-center justify-center pointer-events-none p-4">
+        <div class="w-full max-w-sm bg-white rounded-[2rem] shadow-2xl p-6 md:p-8 flex flex-col items-center pointer-events-auto text-center transform scale-95 transition-transform duration-200">
+            <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4 text-red-500 text-3xl">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 mb-2">Peringatan</h3>
+            <p class="text-gray-600 mb-6 text-sm md:text-base">Silakan pilih makanan terlebih dahulu!</p>
+            <button onclick="closeAlertModal()" class="w-full py-3 bg-[#00880d] text-white font-bold rounded-xl hover:bg-[#00700a] transition-colors active:scale-95 shadow-md">
+                Mengerti
+            </button>
+        </div>
+    </div>
 
 <div class="h-24 md:h-32"></div>
 
@@ -295,6 +310,22 @@
             document.getElementById('checkout-popup').classList.add('hidden');
         }
 
+        function openAlertModal() {
+            document.getElementById('alert-modal-overlay').classList.remove('hidden');
+            document.getElementById('alert-popup').classList.remove('hidden');
+            setTimeout(() => {
+                document.getElementById('alert-popup').children[0].classList.remove('scale-95');
+                document.getElementById('alert-popup').children[0].classList.add('scale-100');
+            }, 10);
+        }
+
+        function closeAlertModal() {
+            document.getElementById('alert-modal-overlay').classList.add('hidden');
+            document.getElementById('alert-popup').classList.add('hidden');
+            document.getElementById('alert-popup').children[0].classList.remove('scale-100');
+            document.getElementById('alert-popup').children[0].classList.add('scale-95');
+        }
+
         function removeItem(type) {
             cartState[type] = null;
             updateUI();
@@ -316,7 +347,8 @@
             console.log("Data yang akan disimpan:", cartState);
                 
             if (!cartState.makanan) {
-                alert("Silakan pilih makanan terlebih dahulu!");
+                closeCheckoutModal();
+                openAlertModal();
                 return;
             }
         

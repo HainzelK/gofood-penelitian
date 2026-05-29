@@ -18,50 +18,78 @@ class PlottingController extends Controller
             ]);
         }
 
+        $inputPhone = $request->no_hp;
+        $existingPhone = session('data_pendaftar.no_hp');
+        
+        $userId = null;
+        if ($existingPhone) {
+            $user = User::where('no_hp', $existingPhone)->first();
+            if ($user) {
+                $userId = $user->id;
+            }
+        }
+
         // 1. Validasi Input
         $request->validate([
             'nama' => 'required',
             'domisili' => 'required',
-            'no_hp' => 'required|unique:users,no_hp', // Menghindari duplikasi no hp
+            'no_hp' => 'required|unique:users,no_hp' . ($userId ? ',' . $userId : ''), // Ignore unique check for existing user
         ], [
             'no_hp.unique' => 'Nomor Handphone ini sudah terdaftar.'
         ]);
 
         $domisili = $request->domisili;
-        $listPlotting = ['ITPT', 'IRPT', 'IRPR', 'ITPR'];
-        $limit = 30;
 
-        // 2. Logika Distribusi Rata & Randomize
-        $counts = [];
-        foreach ($listPlotting as $plot) {
-            $count = User::where('domisili', $domisili)
-                         ->where('plotting', $plot)
-                         ->count();
-            if ($count < $limit) {
-                $counts[$plot] = $count;
+        if ($userId) {
+            // Jika sudah ada di session, update data tanpa menghitung plotting ulang
+            $user = User::find($userId);
+            $selectedPlotting = $user->plotting;
+            
+            $user->update([
+                'name'       => $request->nama,
+                'domisili'   => $domisili,
+                'no_hp'      => $inputPhone,
+                'gender'     => $request->gender,
+                'pendidikan' => $request->pendidikan,
+                'kecamatan'  => $request->kecamatan,
+                'pekerjaan'  => $request->pekerjaan,
+            ]);
+        } else {
+            $listPlotting = ['ITPT', 'IRPT', 'IRPR', 'ITPR'];
+            $limit = 30;
+
+            // 2. Logika Distribusi Rata & Randomize
+            $counts = [];
+            foreach ($listPlotting as $plot) {
+                $count = User::where('domisili', $domisili)
+                             ->where('plotting', $plot)
+                             ->count();
+                if ($count < $limit) {
+                    $counts[$plot] = $count;
+                }
             }
+
+            if (empty($counts)) {
+                return back()->with('error', 'Kuota untuk wilayah ' . $domisili . ' sudah penuh.');
+            }
+
+            $minCount = min($counts);
+            $availablePlots = array_keys($counts, $minCount);
+            $selectedPlotting = $availablePlots[array_rand($availablePlots)];
+
+            // --- HANYA SIMPAN KE TABEL USERS SESUAI GAMBAR ---
+            User::create([
+                'name'       => $request->nama,
+                'plotting'   => $selectedPlotting,
+                'domisili'   => $domisili,
+                'no_hp'      => $inputPhone,
+                'gender'     => $request->gender,
+                'pendidikan' => $request->pendidikan,
+                'kecamatan'  => $request->kecamatan,
+                'pekerjaan'  => $request->pekerjaan,
+            ]);
+            // ------------------------------------------------
         }
-
-        if (empty($counts)) {
-            return back()->with('error', 'Kuota untuk wilayah ' . $domisili . ' sudah penuh.');
-        }
-
-        $minCount = min($counts);
-        $availablePlots = array_keys($counts, $minCount);
-        $selectedPlotting = $availablePlots[array_rand($availablePlots)];
-
-        // --- HANYA SIMPAN KE TABEL USERS SESUAI GAMBAR ---
-        User::create([
-            'name'       => $request->nama,
-            'plotting'   => $selectedPlotting,
-            'domisili'   => $domisili,
-            'no_hp'      => str_replace(' ', '', $request->no_hp),
-            'gender'     => $request->gender,
-            'pendidikan' => $request->pendidikan,
-            'kecamatan'  => $request->kecamatan,
-            'pekerjaan'  => $request->pekerjaan,
-        ]);
-        // ------------------------------------------------
 
         // 3. Simpan ke Session
         session([
@@ -73,7 +101,7 @@ class PlottingController extends Controller
                 'domisili' => $domisili,
                 'kecamatan' => $request->kecamatan,
                 'pekerjaan' => $request->pekerjaan,
-                'no_hp' => $request->no_hp,
+                'no_hp' => $inputPhone,
                 'plotting' => $selectedPlotting,
             ]
         ]);
@@ -123,7 +151,7 @@ class PlottingController extends Controller
                 'icon_pajak' => 'tggl_murah.png',
                 'icon_insentif' => 'hf_murah.png',
                 'pajak_desc' => 'Menjaga keseimbangan antara kesehatan dan ekonomi.',
-                'insentif_desc' => 'Mendorong pola konsumsi sehat secara bertahap.',
+                'insentif_desc' => 'Mendorong pola konsumsi sehat secara bertahap',
             ],
             'ITPR' => [
                 'bg' => 'itpr_desktop.PNG',
@@ -178,6 +206,10 @@ class PlottingController extends Controller
                 'TIME_CASE_PRES'     => $request->input('time_case_pres', '00:00:00'),
                 'TIME_ALL'           => $request->input('time_all', '00:00:00'),
             ]);
+
+            // Hapus session data_pendaftar agar responden tidak bisa submit lagi 
+            // tanpa harus mendaftar ulang
+            session()->forget('data_pendaftar');
 
             return response()->json([
                 'success' => true,
