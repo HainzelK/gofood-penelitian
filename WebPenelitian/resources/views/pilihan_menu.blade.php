@@ -10,19 +10,28 @@
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
     </style>
+    <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
 </head>
 <body class="bg-[#f2f8f2] min-h-screen flex flex-col">
 
         <!-- Header -->
-    <header class="bg-white py-3 px-4 md:px-6 shadow-sm border-b border-gray-100 sticky top-0 z-50 flex-shrink-0">
-        <div class="max-w-7xl mx-auto flex justify-between items-center w-full">
+    <header class="bg-white py-3 px-4 md:px-6 shadow-sm border-b border-gray-100 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
             <div class="w-12 md:w-24">
                 <a href="javascript:history.back()" class="inline-flex items-center justify-center w-10 h-10 bg-[#ffcc00] rounded-xl shadow-sm hover:bg-[#e6b800] transition-transform active:scale-95 text-black">
                     <i class="fas fa-arrow-left"></i>
                 </a>
             </div>
-            <span class="text-[#00880d] font-bold text-lg md:text-xl tracking-tight text-center flex-1 md:flex-none">go-food.site</span>
-            <div class="min-w-[100px] md:min-w-[130px]"></div>
+            <div class="flex items-center justify-center gap-2 flex-1 md:flex-none">
+                <div class="bg-[#00880d] text-white font-black text-xs md:text-sm w-7 h-7 md:w-8 md:h-8 rounded-lg flex items-center justify-center shadow-sm">
+                    GF
+                </div>
+                <span class="text-[#00880d] font-bold text-lg md:text-xl tracking-tight">go-food.site</span>
+            </div>
+            <div class="relative border border-[#00880d] rounded-xl md:rounded-2xl px-3 py-1 text-right bg-white min-w-[100px] md:min-w-[130px]">
+                <span class="font-bold absolute -top-2 right-4 bg-white px-2 text-[10px] md:text-[10px] text-[#00880d] uppercase">Saldo Anda</span>
+                <span id="display-saldo-header" class="text-sm md:text-xl font-bold text-gray-800">Rp60,000</span>
+            </div>
         </div>
     </header>
 

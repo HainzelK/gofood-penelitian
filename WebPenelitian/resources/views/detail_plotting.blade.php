@@ -10,6 +10,7 @@
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
     </style>
+    <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
 </head>
 <body class="bg-[#f2f8f2] md:h-screen flex flex-col md:overflow-hidden">
 
@@ -21,7 +22,9 @@
                     <i class="fas fa-arrow-left"></i>
                 </a>
             </div>
-            <span class="text-[#00880d] font-bold text-lg md:text-xl tracking-tight text-center flex-1 md:flex-none">go-food.site</span>
+            <div class="flex items-center justify-center gap-2 flex-1 md:flex-none">
+                <span class="text-[#00880d] font-bold text-lg md:text-xl tracking-tight">go-food.site</span>
+            </div>
             <div class="min-w-[100px] md:min-w-[130px]"></div>
         </div>
     </header>

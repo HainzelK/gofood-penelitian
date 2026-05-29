@@ -10,18 +10,19 @@
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
     </style>
+    <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
 </head>
 <body class="bg-[#f2f8f2] min-h-screen flex flex-col">
 
         <!-- Header -->
     <header class="bg-white py-3 px-4 md:px-6 shadow-sm border-b border-gray-100 sticky top-0 z-50 flex-shrink-0">
         <div class="max-w-7xl mx-auto flex justify-between items-center w-full">
-            <div class="w-12 md:w-24">
-                <a href="javascript:history.back()" class="inline-flex items-center justify-center w-10 h-10 bg-[#ffcc00] rounded-xl shadow-sm hover:bg-[#e6b800] transition-transform active:scale-95 text-black">
-                    <i class="fas fa-arrow-left"></i>
-                </a>
+            <div class="w-12 md:w-24 h-10">
+                <!-- Tombol back dihapus, tinggi dipertahankan -->
             </div>
-            <span class="text-[#00880d] font-bold text-lg md:text-xl tracking-tight text-center flex-1 md:flex-none">go-food.site</span>
+            <div class="flex items-center justify-center gap-2 flex-1 md:flex-none">
+                <span class="text-[#00880d] font-bold text-lg md:text-xl tracking-tight">go-food.site</span>
+            </div>
             <div class="min-w-[100px] md:min-w-[130px]"></div>
         </div>
     </header>
@@ -66,9 +67,12 @@
                     Tidak Setuju
                 </a>
                 
-                <a href="{{ route('informasi.diri') }}" class="w-full md:w-auto px-10 py-3.5 bg-[#00880d] text-white font-bold rounded-2xl hover:bg-[#00700a] shadow-lg shadow-green-100 transition-all text-center text-[15px]">
-                    Setuju & Lanjutkan
-                </a>
+                <form method="POST" action="{{ route('consent.accept') }}" class="w-full md:w-auto">
+                    @csrf
+                    <button type="submit" class="w-full px-10 py-3.5 bg-[#00880d] text-white font-bold rounded-2xl hover:bg-[#00700a] shadow-lg shadow-green-100 transition-all text-center text-[15px]">
+                        Setuju & Lanjutkan
+                    </button>
+                </form>
             </div>
 
         </div>

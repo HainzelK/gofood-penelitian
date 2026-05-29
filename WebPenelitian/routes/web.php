@@ -4,49 +4,69 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RestoranController;
 use App\Http\Controllers\PlottingController; 
+use App\Http\Controllers\AdminController;
 
-// 1. Restaurant and Menu API Routes (TETAP)
-Route::get('/restaurants', [RestoranController::class, 'index'])->name('restaurants.index');
-Route::get('/restaurants/{id}/menus', [RestoranController::class, 'showMenus'])->name('restaurants.menus');
-
-// 2. Halaman Awal & Informasi Diri (TETAP)
+Route::redirect('/', '/consent');
 Route::get('/consent', function () { return view('consent'); })->name('consent');
-Route::get('/informasi-diri', function () { return view('informasi_diri'); })->name('informasi.diri');
+Route::post('/consent/accept', function(Request $request) {
+    $request->session()->put('consent_accepted', true);
+    return redirect()->route('informasi.diri');
+})->name('consent.accept');
 
-// 3. PROSES SIMPAN + LOGIKA PLOTTING (UPDATE: Langsung Redirect ke Info Umum)
-// Di dalam PlottingController@store nanti harus redirect ke 'info.makassar' atau 'info.toraja'
-Route::post('/simpan-informasi', [PlottingController::class, 'store'])->name('simpan.informasi');
+Route::middleware(['check.consent'])->group(function () {
+    // 1. Restaurant and Menu API Routes (TETAP)
+    Route::get('/restaurants', [RestoranController::class, 'index'])->name('restaurants.index');
+    Route::get('/restaurants/{id}/menus', [RestoranController::class, 'showMenus'])->name('restaurants.menus');
 
-// 4. Halaman Khusus Daerah / Info Umum (TETAP)
-Route::get('/informasi_umum_toraja', function () { return view('informasi_umum_toraja'); })->name('info.toraja');
-Route::get('/informasi_umum_makassar', function () { return view('informasi_umum_makassar'); })->name('info.makassar');
+    // 2. Halaman Awal & Informasi Diri (TETAP)
+    Route::get('/informasi-diri', function () { return view('informasi_diri'); })->name('informasi.diri');
 
-// 5. REDIRECT KE INSTRUKSI KHUSUS PLOTTING (UPDATE: Tombol "Lanjut" dari Info Umum lari ke sini)
-// showPlotting akan mengembalikan view instruksi sesuai plotting user (itpt, irpt, dll)
-Route::get('/detail-plotting', [PlottingController::class, 'showPlotting'])->name('detail.plotting');
+    // 3. PROSES SIMPAN + LOGIKA PLOTTING (UPDATE: Langsung Redirect ke Info Umum)
+    // Di dalam PlottingController@store nanti harus redirect ke 'info.makassar' atau 'info.toraja'
+    Route::post('/simpan-informasi', [PlottingController::class, 'store'])->name('simpan.informasi');
 
-// Halaman Step 3 (Konstan)
-Route::get('/instruksi_3', function () {
-    return view('instruksi_3');
-})->name('instruksi.3');
+    // 4. Halaman Khusus Daerah / Info Umum (TETAP)
+    Route::get('/informasi_umum_toraja', function () { return view('informasi_umum_toraja'); })->name('info.toraja');
+    Route::get('/informasi_umum_makassar', function () { return view('informasi_umum_makassar'); })->name('info.makassar');
 
-// 6. Halaman Restoran & Menu (TETAP)
-Route::get('/pilihan_menu', function () { return view('pilihan_menu'); })->name('pilihan.menu');    
-Route::get('/pilihan-restoran/{jenis}', [RestoranController::class, 'showByJenis'])->name('restoran.jenis');
-Route::get('/restoran/{id}/menu', [RestoranController::class, 'showMenuPage'])->name('restoran.menu');
+    // 5. REDIRECT KE INSTRUKSI KHUSUS PLOTTING (UPDATE: Tombol "Lanjut" dari Info Umum lari ke sini)
+    // showPlotting akan mengembalikan view instruksi sesuai plotting user (itpt, irpt, dll)
+    Route::get('/detail-plotting', [PlottingController::class, 'showPlotting'])->name('detail.plotting');
 
-Route::get('/pembayaran', function () {
-    // Anda bisa menambahkan logic untuk mengambil data pesanan di sini jika perlu
-    return view('pembayaran');
-})->name('pembayaran');
+    // Halaman Step 3 (Konstan)
+    Route::get('/instruksi_3', function () {
+        return view('instruksi_3');
+    })->name('instruksi.3');
 
-Route::get('/topup', function () {
-    return view('top_up');
-})->name('topup');
+    // 6. Halaman Restoran & Menu (TETAP)
+    Route::get('/pilihan_menu', function () { return view('pilihan_menu'); })->name('pilihan.menu');    
+    Route::get('/pilihan-restoran/{jenis}', [RestoranController::class, 'showByJenis'])->name('restoran.jenis');
+    Route::get('/restoran/{id}/menu', [RestoranController::class, 'showMenuPage'])->name('restoran.menu');
 
-// 7. PROSES BAYAR: Simpan jawaban responden ke database
-Route::post('/proses-bayar', [PlottingController::class, 'prosesBayar'])->name('proses.bayar');
+    Route::get('/pembayaran', function () {
+        // Anda bisa menambahkan logic untuk mengambil data pesanan di sini jika perlu
+        return view('pembayaran');
+    })->name('pembayaran');
 
-Route::get('/thankyou', function () {
-    return view('thankyou');
-})->name('thankyou');
+    Route::get('/topup', function () {
+        return view('top_up');
+    })->name('topup');
+
+    // 7. PROSES BAYAR: Simpan jawaban responden ke database
+    Route::post('/proses-bayar', [PlottingController::class, 'prosesBayar'])->name('proses.bayar');
+
+    Route::get('/thankyou', function () {
+        return view('thankyou');
+    })->name('thankyou');
+});
+
+// Route Login (Bisa diakses siapa saja)
+Route::get('/admin/login', [AdminController::class, 'showLoginForm'])->name('admin.login.form');
+Route::post('/admin/login', [AdminController::class, 'login'])->name('admin.login.submit');
+
+// Route Dashboard (Hanya bisa diakses jika sudah login lewat middleware)
+Route::middleware(['admin.auth'])->group(function () {
+    Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+    Route::get('/admin/download', [AdminController::class, 'downloadCsv'])->name('admin.download');
+    Route::post('/admin/logout', [AdminController::class, 'logout'])->name('admin.logout');
+});

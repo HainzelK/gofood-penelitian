@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Informasi Umum - Toraja</title>
+    <title>Informasi Umum - Makassar</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
     </style>
+    <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
 </head>
 <body class="bg-white min-h-screen flex flex-col overflow-hidden">
 
@@ -21,7 +22,12 @@
                     <i class="fas fa-arrow-left"></i>
                 </a>
             </div>
-            <span class="text-[#00880d] font-bold text-lg md:text-xl tracking-tight text-center flex-1 md:flex-none">go-food.site</span>
+            <div class="flex items-center justify-center gap-2 flex-1 md:flex-none">
+                <div class="bg-[#00880d] text-white font-black text-xs md:text-sm w-7 h-7 md:w-8 md:h-8 rounded-lg flex items-center justify-center shadow-sm">
+                    GF
+                </div>
+                <span class="text-[#00880d] font-bold text-lg md:text-xl tracking-tight">go-food.site</span>
+            </div>
             <div class="min-w-[100px] md:min-w-[130px]"></div>
         </div>
     </header>
