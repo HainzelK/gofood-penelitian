@@ -29,6 +29,7 @@
             box-shadow: 10px 10px 20px rgba(0,0,0,0.3);
         }
     </style>
+    <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
 </head>
 <body class="corrugated-bg min-h-screen flex flex-col items-center justify-center relative overflow-hidden">
 

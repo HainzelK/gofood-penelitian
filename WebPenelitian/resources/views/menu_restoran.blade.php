@@ -18,6 +18,7 @@
         }
         .animate-cart { animation: slideUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
     </style>
+    <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
 </head>
 <body class="bg-[#f2f8f2] min-h-screen flex flex-col relative">
 
@@ -29,7 +30,12 @@
                     <i class="fas fa-arrow-left"></i>
                 </a>
             </div>
-            <span class="text-[#00880d] font-bold text-lg md:text-xl tracking-tight text-center flex-1 md:flex-none">go-food.site</span>
+            <div class="flex items-center justify-center gap-2 flex-1 md:flex-none">
+                <div class="bg-[#00880d] text-white font-black text-xs md:text-sm w-7 h-7 md:w-8 md:h-8 rounded-lg flex items-center justify-center shadow-sm">
+                    GF
+                </div>
+                <span class="text-[#00880d] font-bold text-lg md:text-xl tracking-tight">go-food.site</span>
+            </div>
             <div class="relative border border-[#00880d] rounded-xl md:rounded-2xl px-3 py-1 text-right bg-white min-w-[100px] md:min-w-[130px]">
                 <span class="font-bold absolute -top-2 right-4 bg-white px-2 text-[10px] md:text-[10px] text-[#00880d] uppercase">Saldo Anda</span>
                 <span id="display-saldo-header" class="text-sm md:text-xl font-bold text-gray-800">Rp60,000</span>

@@ -11,7 +11,13 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // DAFTARKAN ALIAS DI SINI:
+        $middleware->alias([
+            // Jika pakai cara ini tetap error, berarti file AdminAuth.php Anda 
+            // memang tidak ditemukan di folder app/Http/Middleware/
+            'admin.auth' => \App\Http\Middleware\AdminAuth::class,
+            'check.consent' => \App\Http\Middleware\CheckConsent::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
