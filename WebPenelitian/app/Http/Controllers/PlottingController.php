@@ -30,15 +30,20 @@ class PlottingController extends Controller
         }
 
         // 1. Validasi Input
+        // 1. Validasi Input
         $request->validate([
             'nama' => 'required',
             'domisili' => 'required',
-            'no_hp' => 'required|unique:users,no_hp' . ($userId ? ',' . $userId : ''), // Ignore unique check for existing user
+            'domisili_lainnya' => 'required_if:domisili,Lainnya|max:100', // Wajib diisi jika pilih Lainnya
+            'no_hp' => 'unique:users,no_hp' . ($userId ? ',' . $userId : ''), 
         ], [
-            'no_hp.unique' => 'Nomor Handphone ini sudah terdaftar.'
+            'no_hp.unique' => 'Nomor Handphone ini sudah terdaftar.',
+            'domisili_lainnya.required_if' => 'Nama daerah domisili harus diisi.',
+            'domisili_lainnya.max' => 'Nama daerah maksimal 100 karakter.'
         ]);
 
-        $domisili = $request->domisili;
+        // Tentukan nilai domisili yang akan disimpan
+        $domisiliSimpan = ($request->domisili === 'Lainnya') ? $request->domisili_lainnya : $request->domisili;
 
         if ($userId) {
             // Jika sudah ada di session, update data tanpa menghitung plotting ulang
@@ -47,7 +52,7 @@ class PlottingController extends Controller
             
             $user->update([
                 'name'       => $request->nama,
-                'domisili'   => $domisili,
+                'domisili'   => $domisiliSimpan,
                 'no_hp'      => $inputPhone,
                 'gender'     => $request->gender,
                 'pendidikan' => $request->pendidikan,
@@ -61,7 +66,7 @@ class PlottingController extends Controller
             // 2. Logika Distribusi Rata & Randomize
             $counts = [];
             foreach ($listPlotting as $plot) {
-                $count = User::where('domisili', $domisili)
+                $count = User::where('domisili', $domisiliSimpan)
                              ->where('plotting', $plot)
                              ->count();
                 if ($count < $limit) {
@@ -70,7 +75,7 @@ class PlottingController extends Controller
             }
 
             if (empty($counts)) {
-                return back()->with('error', 'Kuota untuk wilayah ' . $domisili . ' sudah penuh.');
+                return back()->with('error', 'Kuota untuk wilayah ' . $domisiliSimpan . ' sudah penuh.');
             }
 
             $minCount = min($counts);
@@ -81,7 +86,7 @@ class PlottingController extends Controller
             User::create([
                 'name'       => $request->nama,
                 'plotting'   => $selectedPlotting,
-                'domisili'   => $domisili,
+                'domisili'   => $domisiliSimpan,
                 'no_hp'      => $inputPhone,
                 'gender'     => $request->gender,
                 'pendidikan' => $request->pendidikan,
@@ -98,7 +103,7 @@ class PlottingController extends Controller
                 'gender' => $request->gender,
                 'usia' => $request->usia,
                 'pendidikan' => $request->pendidikan,
-                'domisili' => $domisili,
+                'domisili' => $domisiliSimpan,
                 'kecamatan' => $request->kecamatan,
                 'pekerjaan' => $request->pekerjaan,
                 'no_hp' => $inputPhone,
@@ -108,10 +113,21 @@ class PlottingController extends Controller
         session()->save();
 
         // 4. Redirect berdasarkan domisili
-        if (strtolower($domisili) == 'makassar') {
+        $domisiliUtama = strtolower($domisiliSimpan); // Mengacu pada pilihan dropdown (Makassar/Toraja/Lainnya)
+        $gender = $request->gender;
+
+        if ($domisiliUtama === 'makassar') {
             return redirect()->route('info.makassar');
-        } else {
+        } elseif ($domisiliUtama === 'toraja') {
             return redirect()->route('info.toraja');
+        } else {
+            // Kondisi Khusus jika pilih "Lainnya"
+            if ($gender === 'Perempuan') {
+                return redirect()->route('info.toraja');
+            } else {
+                // Laki-laki atau lainnya
+                return redirect()->route('info.makassar');
+            }
         }
     }
 

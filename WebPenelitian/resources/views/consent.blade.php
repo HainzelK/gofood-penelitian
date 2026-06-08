@@ -63,7 +63,7 @@
 
             <!-- Buttons: Stack di Mobile, Side-by-side di Desktop -->
             <div class="mt-8 md:mt-12 flex flex-col-reverse md:flex-row gap-4 justify-center">
-                <a href="" class="w-full md:w-auto px-10 py-3.5 border-2 border-[#b54a3a] text-[#b54a3a] font-bold rounded-2xl hover:bg-red-50 transition-colors text-center text-[15px]">
+                <a href="{{ route('thankyou') }}" class="w-full md:w-auto px-10 py-3.5 border-2 border-[#b54a3a] text-[#b54a3a] font-bold rounded-2xl hover:bg-red-50 transition-colors text-center text-[15px]">
                     Tidak Setuju
                 </a>
                 
