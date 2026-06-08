@@ -16,61 +16,33 @@
         .field-container { height: 62px; position: relative; }
 
         /* --- LOGIKA FLOATING LABEL --- */
-<style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
-    body { font-family: 'Plus Jakarta Sans', sans-serif; }
-    
-    .appearance-none { appearance: none; -webkit-appearance: none; }
-    .field-container { height: 62px; position: relative; }
+        .floating-label {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: white;
+            padding: 0 0.4rem;
+            color: #6b7280;
+            transition: all 0.2s ease-in-out;
+            pointer-events: none;
+            z-index: 20;
+        }
 
-    /* --- LOGIKA FLOATING LABEL --- */
-    .floating-label {
-        position: absolute;
-        left: 1rem;
-        top: 50%;
-        transform: translateY(-50%);
-        background-color: white;
-        padding: 0 0.25rem;
-        color: #6b7280;
-        transition: all 0.2s ease-in-out;
-        pointer-events: none;
-        z-index: 20;
-    }
-
-    /* --- LOGIKA WARNA & POSISI (INPUT & SELECT) --- */
-
-    /* 1. Saat Fokus (Diklik) */
-    .input-field:focus ~ .floating-label,
-    .select-field:focus ~ .floating-label,
-    /* 2. Saat Terisi (Valid atau Ada Teks) */
-    .input-field:not(:placeholder-shown) ~ .floating-label,
-    .select-field:valid ~ .floating-label {
-        top: 0;
-        font-size: 0.75rem;
-        color: #00880d;
-        font-weight: 700;
-    }
-
-    /* 3. Border Hijau Saat Fokus atau Terisi */
-    .input-field:focus,
-    .select-field:focus,
-    .input-field:not(:placeholder-shown),
-    .select-field:valid {
-        border-color: #00880d;
-        border-width: 2px;
-    }
-
-    label, .floating-label {
-        transition: all 0.2s ease-in-out;
-    }
-
-        /* Khusus Select (karena tidak punya placeholder-shown) */
+        /* --- LOGIKA WARNA & POSISI (INPUT & SELECT) --- */
+        .input-field:focus ~ .floating-label,
+        .select-field:focus ~ .floating-label,
+        .input-field:not(:placeholder-shown) ~ .floating-label,
         .select-field:valid ~ .floating-label {
             top: 0;
             font-size: 0.75rem;
             color: #00880d;
             font-weight: 700;
         }
+
+        .input-field:focus,
+        .select-field:focus,
+        .input-field:not(:placeholder-shown),
         .select-field:valid {
             border-color: #00880d;
             border-width: 2px;
@@ -80,7 +52,7 @@
 </head>
 <body class="bg-[#f2f8f2] min-h-screen flex flex-col">
 
-        <!-- Header -->
+    <!-- Header -->
     <header class="bg-white py-3 px-4 md:px-6 shadow-sm border-b border-gray-100 sticky top-0 z-50 flex-shrink-0">
         <div class="max-w-7xl mx-auto flex justify-between items-center w-full">
             <div class="w-12 md:w-24">
@@ -105,7 +77,7 @@
 
                 <!-- Nama Lengkap -->
                 <div class="field-container">
-                    <input type="text" name="nama" id="nama" placeholder=" " required
+                    <input type="text" name="nama" id="nama" placeholder=" " maxlength="50" required 
                         class="input-field w-full h-full border-2 border-gray-300 rounded-2xl px-4 outline-none transition-all focus:ring-0 font-medium text-gray-800">
                     <label class="floating-label">Nama Lengkap</label>
                 </div>
@@ -124,16 +96,16 @@
                     </div>
                 </div>
 
-<!-- Usia (Sudah ditambah limit max 100) -->
-<div class="field-container">
-    <input type="number" name="usia" id="usia" placeholder=" " required
-        min="1" 
-        max="100" 
-        oninput="if(value > 100) value = 100; if(value < 0) value = '';"
-        class="input-field w-full h-full border-2 border-gray-300 rounded-2xl pl-4 pr-16 outline-none transition-all focus:ring-0 font-medium text-gray-800">
-    <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">tahun</span>
-    <label class="floating-label">Usia</label>
-</div>
+                <!-- Usia -->
+                <div class="field-container">
+                    <input type="number" name="usia" id="usia" placeholder=" " required
+                        min="1" 
+                        max="100" 
+                        oninput="if(value > 100) value = 100; if(value < 0) value = '';"
+                        class="input-field w-full h-full border-2 border-gray-300 rounded-2xl pl-4 pr-16 outline-none transition-all focus:ring-0 font-medium text-gray-800">
+                    <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">tahun</span>
+                    <label class="floating-label">Usia</label>
+                </div>
 
                 <!-- Pendidikan Terakhir -->
                 <div class="field-container">
@@ -159,10 +131,22 @@
                         <option value="" disabled selected hidden></option>
                         <option value="Makassar">Kota Makassar</option>
                         <option value="Toraja">Toraja</option>
+                        <option value="Lainnya">Lainnya (Sebutkan...)</option>
                     </select>
                     <label class="floating-label">Daerah Domisili</label>
                     <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-800">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path d="M19 9l-7 7-7-7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Input Tambahan (Ukurannya sekarang 1 kolom, sama dengan yang lain) -->
+                <div id="other-domisili-wrapper" class="hidden">
+                    <div class="field-container">
+                        <input type="text" name="domisili_lainnya" id="domisili_lainnya" placeholder=" " maxlength="80"
+                            class="input-field w-full h-full border-2 border-gray-300 rounded-2xl px-4 outline-none transition-all focus:ring-0 font-medium text-gray-800">
+                        <label class="floating-label">Sebutkan Daerah Anda</label>
                     </div>
                 </div>
 
@@ -180,9 +164,9 @@
                     <label class="floating-label">Pekerjaan</label>
                 </div>
 
-                <!-- No HP (Fix: Klik di mana saja di box) -->
+                <!-- No HP -->
                 <div class="field-container group">
-                    <input type="tel" name="no_hp" id="no_hp" placeholder=" " required
+                    <input type="tel" name="no_hp" id="no_hp" placeholder=" "
                         oninput="formatPhoneNumber(this)"
                         class="input-field w-full h-full border-2 border-gray-300 rounded-2xl pl-4 pr-4 outline-none transition-all focus:ring-0 font-medium text-gray-800 tracking-widest">
                     <label class="floating-label">No. Handphone</label>
@@ -206,7 +190,6 @@
     </main>
 
     <script>
-        // Start TIME_ALL timer (waktu dari pengisian informasi diri)
         localStorage.setItem('time_all_start', Date.now().toString());
 
         function formatPhoneNumber(input) {
@@ -221,6 +204,24 @@
             const errorText = document.getElementById('phone-error');
             errorText.classList.toggle('hidden', value.length === 0 || value.length >= 9);
         }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const domisiliSelect = document.getElementById('domisili');
+            const otherWrapper = document.getElementById('other-domisili-wrapper');
+            const otherInput = document.getElementById('domisili_lainnya');
+
+            domisiliSelect.addEventListener('change', function() {
+                if (this.value === 'Lainnya') {
+                    otherWrapper.classList.remove('hidden');
+                    otherInput.setAttribute('required', 'required');
+                    setTimeout(() => otherInput.focus(), 100);
+                } else {
+                    otherWrapper.classList.add('hidden');
+                    otherInput.removeAttribute('required');
+                    otherInput.value = '';
+                }
+            });
+        });
     </script>
 </body>
 </html>

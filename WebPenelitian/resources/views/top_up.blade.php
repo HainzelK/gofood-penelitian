@@ -23,9 +23,6 @@
                 </a>
             </div>
             <div class="flex items-center justify-center gap-2 flex-1 md:flex-none">
-                <div class="bg-[#00880d] text-white font-black text-xs md:text-sm w-7 h-7 md:w-8 md:h-8 rounded-lg flex items-center justify-center shadow-sm">
-                    GF
-                </div>
                 <span class="text-[#00880d] font-bold text-lg md:text-xl tracking-tight">go-food.site</span>
             </div>
             <div class="relative border border-[#00880d] rounded-xl md:rounded-2xl px-3 py-1 text-right bg-white min-w-[100px] md:min-w-[130px]">

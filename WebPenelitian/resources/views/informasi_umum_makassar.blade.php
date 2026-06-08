@@ -23,9 +23,6 @@
                 </a>
             </div>
             <div class="flex items-center justify-center gap-2 flex-1 md:flex-none">
-                <div class="bg-[#00880d] text-white font-black text-xs md:text-sm w-7 h-7 md:w-8 md:h-8 rounded-lg flex items-center justify-center shadow-sm">
-                    GF
-                </div>
                 <span class="text-[#00880d] font-bold text-lg md:text-xl tracking-tight">go-food.site</span>
             </div>
             <div class="min-w-[100px] md:min-w-[130px]"></div>
@@ -54,7 +51,13 @@
         <div class="relative z-10 w-[90%] md:w-[450px] bg-white/95 backdrop-blur-sm p-8 md:p-12 rounded-[2rem] md:rounded-[2.5rem] shadow-2xl mt-8 md:mt-20 mx-auto md:mr-24 md:ml-auto transition-all">
             <h1 class="text-2xl md:text-3xl font-bold text-gray-900 mb-4 md:mb-6">Informasi Umum</h1>
             <p class="text-gray-700 leading-relaxed text-sm md:text-base font-medium">
-                Anda adalah <b>pegawai</b> di yang bekerja di <b>area perkantoran</b> sekitar jalan <b>A.P. Pettarani</b>. Karena <b>jadwal kerja</b> yang padat, Anda mengandalkan <b>Go-Food</b> minimal <b>6x sebulan</b> untuk makan siang.
+                @if(strtolower(session('data_pendaftar.domisili')) == 'makassar')
+                    {{-- Teks Khusus Makassar --}}
+                    Anda adalah <b>pegawai</b> di yang bekerja di <b>area perkantoran</b> sekitar jalan <b>A.P. Pettarani</b>. Karena <b>jadwal kerja</b> yang padat, Anda mengandalkan <b>Go-Food</b> minimal <b>6x sebulan</b> untuk makan siang.
+                @else
+                    {{-- Teks untuk Lainnya / Selain Makassar --}}
+                    Anda adalah <b>pegawai</b> di yang bekerja di <b>area perkantoran</b>. Karena <b>jadwal kerja</b> yang padat, Anda mengandalkan <b>Go-Food</b> minimal <b>6x sebulan</b> untuk makan siang.
+                @endif    
             </p>
         </div>
 

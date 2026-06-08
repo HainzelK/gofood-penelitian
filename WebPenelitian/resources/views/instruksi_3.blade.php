@@ -23,9 +23,6 @@
                 </a>
             </div>
             <div class="flex items-center justify-center gap-2 flex-1 md:flex-none">
-                <div class="bg-[#00880d] text-white font-black text-xs md:text-sm w-7 h-7 md:w-8 md:h-8 rounded-lg flex items-center justify-center shadow-sm">
-                    GF
-                </div>
                 <span class="text-[#00880d] font-bold text-lg md:text-xl tracking-tight">go-food.site</span>
             </div>
             <div class="min-w-[100px] md:min-w-[130px]"></div>
@@ -36,11 +33,23 @@
         
         <!-- Background Image (Gambar Orang Pegang HP) -->
         <div class="absolute inset-0 z-0">
-            @php
-                $domisili = strtolower(session('data_pendaftar.domisili', 'toraja'));
+             @php
+                // Ambil data dari session
+                $domisili = strtolower(session('data_pendaftar.domisili', ''));
+                $gender = session('data_pendaftar.gender');
+
+                // Logika Penentuan Tema (Makassar atau Toraja)
+                if ($domisili == 'makassar') {
+                    $theme = 'makassar';
+                } elseif ($domisili == 'toraja') {
+                    $theme = 'toraja';
+                } else {
+                    // Jika bukan keduanya (Lainnya)
+                    $theme = ($gender == 'Perempuan') ? 'toraja' : 'makassar';
+                }
             @endphp
 
-            @if($domisili == 'makassar')
+            @if($theme == 'makassar')
                 <!-- Gambar Desktop -->
                 <img src="{{ asset('storage/instruksi3-desktop-makassar.jpeg') }}" 
                      alt="Desktop" 
@@ -66,7 +75,7 @@
         </div>
 
         <!-- Sidebar Panel -->
-        <div class="absolute left-4 {{ $domisili == 'makassar' ? 'md:left-auto md:right-10' : 'md:left-10' }} top-10 md:top-20 w-[90%] md:w-[320px] bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl p-6 z-10 border border-gray-100">
+        <div class="absolute left-4 {{ $domisili == 'makassar' or $gender == 'Laki-laki' ? 'md:left-auto md:right-10' : 'md:left-10' }} top-10 md:top-20 w-[90%] md:w-[320px] bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl p-6 z-10 border border-gray-100">
             
             <div class="flex items-start gap-4">
                 <!-- Badge Angka 3 -->
