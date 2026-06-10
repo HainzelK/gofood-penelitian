@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Penjelasan & Persetujuan Responden</title>
+    <title>Apakah Kebijakan Pemerintah Mempengaruhi Keputusan Anda?</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -53,6 +53,10 @@
                 <div class="flex gap-3">
                     <span class="font-semibold text-gray-900">3.</span>
                     <p>Data yang diperoleh dari penelitian ini dijaga kerahasiaannya dan hanya digunakan untuk kepentingan ilmiah.</p>
+                </div>
+                <div class="flex gap-3">
+                    <span class="font-semibold text-gray-900">4.</span>
+                    <p>4. Semua informasi adalah informasi yang <b>TIDAK REAL</b> dan <b>TIDAK TERHUBUNG DENGAN APLIKASI APAPUN</b> , <b>KECUALI</b> data diri yang Anda berikan.</p>
                 </div>
             </div>
 
