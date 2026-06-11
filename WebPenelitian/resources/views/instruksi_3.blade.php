@@ -45,7 +45,7 @@
                     $theme = 'toraja';
                 } else {
                     // Jika bukan keduanya (Lainnya)
-                    $theme = ($gender == 'Perempuan') ? 'toraja' : 'makassar';
+                    $theme = ($gender == 'Perempuan') ? 'perempuan' : 'laki';
                 }
             @endphp
 
@@ -59,7 +59,7 @@
                 <img src="{{ asset('storage/phone_instruksi3_makassar.jpeg') }}" 
                      alt="Mobile" 
                      class="block md:hidden w-full h-full object-cover object-top">
-            @else
+            @elseif($theme == 'toraja')
                 <!-- Gambar Desktop -->
                 <img src="{{ asset('storage/instruksi3-desktop-toraja.PNG') }}" 
                      alt="Desktop" 
@@ -69,13 +69,33 @@
                 <img src="{{ asset('storage/phone_instruksi3_toraja.png') }}" 
                      alt="Mobile" 
                      class="block md:hidden w-full h-full object-cover object-top">
+            @elseif($theme == 'perempuan')
+            <!-- Gambar Desktop -->
+                <img src="{{ asset('storage/desktop_instruksi3_lainnya.jpeg') }}" 
+                     alt="Desktop" 
+                     class="hidden md:block w-full h-full object-cover object-top">
+                
+                <!-- Gambar HP -->
+                <img src="{{ asset('storage/phone_instruksi3_lainnya.jpeg') }}" 
+                     alt="Mobile" 
+                     class="block md:hidden w-full h-full object-cover object-top">
+            @elseif($theme == 'laki')
+                <!-- Gambar Desktop -->
+                <img src="{{ asset('storage/instruksi3-desktop-makassar.jpeg') }}" 
+                     alt="Desktop" 
+                     class="hidden md:block w-full h-full object-cover object-top">
+                
+                <!-- Gambar HP -->
+                <img src="{{ asset('storage/phone_instruksi3_makassar.jpeg') }}" 
+                     alt="Mobile" 
+                     class="block md:hidden w-full h-full object-cover object-top">
             @endif
             
             <div class="absolute inset-0 bg-black/10"></div>
         </div>
 
         <!-- Sidebar Panel -->
-        <div class="absolute left-4 {{ $domisili == 'makassar' or $gender == 'Laki-laki' ? 'md:left-auto md:right-10' : 'md:left-10' }} top-10 md:top-20 w-[90%] md:w-[320px] bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl p-6 z-10 border border-gray-100">
+        <div class="absolute left-4 {{ $theme == 'makassar' || $theme == 'laki' ? 'md:left-auto md:right-10' : 'md:left-10' }} top-10 md:top-20 w-[90%] md:w-[320px] bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl p-6 z-10 border border-gray-100">
             
             <div class="flex items-start gap-4">
                 <!-- Badge Angka 3 -->
@@ -89,7 +109,7 @@
         </div>
 
         <!-- Tombol Selanjutnya (Kanan Bawah) -->
-        <div class="absolute bottom-10 left-0 right-0 md:left-auto md:right-10 flex justify-center md:block z-20">
+        <div class="fixed bottom-10 left-0 right-0 md:left-auto md:right-10 flex justify-center md:block z-20">
             <a href="{{ route('pilihan.menu') }}" 
                class="w-[85%] md:w-auto text-center px-12 py-4 bg-[#00880d] text-white font-bold rounded-2xl hover:bg-[#00700a] transition-all text-lg shadow-xl">
                 Selanjutnya
