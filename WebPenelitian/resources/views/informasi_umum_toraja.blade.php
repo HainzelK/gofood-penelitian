@@ -34,16 +34,26 @@
         
         <!-- Background Image Container -->
         <div class="absolute inset-0 z-0">
-            <!-- Gambar Desktop -->
-            <img src="{{ asset('storage/toraja.PNG') }}" 
-                 alt="Desktop" 
-                 class="hidden md:block w-full h-full object-cover object-top">
-            
-            <!-- Gambar HP -->
-            <img src="{{ asset('storage/phone_toraja.jpeg') }}" 
-                 alt="Mobile" 
-                 class="block md:hidden w-full h-full object-cover object-top">
-            
+            @if(strtolower(session('data_pendaftar.domisili')) == 'toraja')
+                <!-- Gambar Desktop -->
+                <img src="{{ asset('storage/toraja.PNG') }}" 
+                     alt="Desktop" 
+                     class="hidden md:block w-full h-full object-cover object-top">
+
+                <!-- Gambar HP -->
+                <img src="{{ asset('storage/phone_toraja.jpeg') }}" 
+                     alt="Mobile" 
+                     class="block md:hidden w-full h-full object-cover object-top">
+            @else
+                <img src="{{ asset('storage/desktop_instruksi1_lainnya.jpeg') }}" 
+                     alt="Desktop" 
+                     class="hidden md:block w-full h-full object-cover object-top">
+
+                <!-- Gambar HP -->
+                <img src="{{ asset('storage/phone_instruksi1_lainnya.jpeg') }}" 
+                     alt="Mobile" 
+                     class="block md:hidden w-full h-full object-cover object-top">
+            @endif
             <div class="absolute inset-0 bg-black/10"></div>
         </div>
 
@@ -62,7 +72,7 @@
         </div>
 
         <!-- Floating Button Selanjutnya -->
-        <div class="absolute bottom-10 left-0 right-0 md:left-auto md:right-10 flex justify-center md:block z-20">
+        <div class="fixed bottom-10 left-0 right-0 md:left-auto md:right-10 flex justify-center md:block z-20">
             <a href="{{ route('detail.plotting') }}" 
                class="w-[85%] md:w-auto text-center px-12 py-4 bg-[#00880d] text-white font-bold rounded-2xl hover:bg-[#00700a] transition-all text-lg shadow-xl">
                 Selanjutnya
