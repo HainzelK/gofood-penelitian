@@ -60,22 +60,15 @@ class PlottingController extends Controller
             ]);
         } else {
             $listPlotting = ['ITPT', 'IRPT', 'IRPR', 'ITPR'];
-            $limit = 30;
 
             // 2. Logika Distribusi Rata & Randomize
             $counts = [];
             foreach ($listPlotting as $plot) {
-                $count = User::where('domisili', $domisiliSimpan)
+                $counts[$plot] = User::where('domisili', $domisiliSimpan)
                              ->where('plotting', $plot)
                              ->count();
-                if ($count < $limit) {
-                    $counts[$plot] = $count;
-                }
             }
 
-            if (empty($counts)) {
-                return back()->with('error', 'Kuota untuk wilayah ' . $domisiliSimpan . ' sudah penuh.');
-            }
 
             $minCount = min($counts);
             $availablePlots = array_keys($counts, $minCount);
