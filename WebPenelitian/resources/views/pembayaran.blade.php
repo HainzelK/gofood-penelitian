@@ -262,11 +262,14 @@
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
-                    // Potong Saldo & Bersihkan Cart (Snippet 1)
+                    // TEPAT DI SINI: Set var true agar responden dianggap sudah selesai
+                    localStorage.setItem('research_completed', 'true');
+
+                    // Potong Saldo & Bersihkan Cart
                     localStorage.setItem('gofood_saldo', saldoSaatIni - window.currentTotal);
                     localStorage.removeItem('gofood_cart');
                     
-                    // alert("Pembayaran Berhasil! Pesanan sedang diproses.");
+                    // Teruskan ke halaman sukses (Thank You)
                     window.location.href = "/thankyou";
                 } else {
                     alert("Gagal: " + (data.message || 'Terjadi kesalahan.'));
@@ -276,6 +279,8 @@
                 console.error('Error:', err);
                 alert("Terjadi kesalahan jaringan.");
             });
+
+            
         }
     </script>
 </body>
