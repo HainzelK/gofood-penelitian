@@ -222,6 +222,24 @@
                 }
             });
         });
+        // Tambahkan ini di dalam script halaman Informasi Diri Anda
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('formDiri');
+            const domisiliSelect = document.getElementById('domisili');
+
+            form.addEventListener('submit', function(e) {
+                const selectedDomisili = domisiliSelect.value;
+                const isBlocked = localStorage.getItem('block_perangkat_non_toraja');
+
+                // Jika domisili yang dipilih BUKAN Toraja DAN perangkat ini sudah pernah mengisi (terblokir)
+                if (selectedDomisili !== 'Toraja' && isBlocked === 'true') {
+                    e.preventDefault(); // Batalkan kirim form
+                    alert('Maaf, perangkat ini sudah digunakan untuk mengisi data wilayah tersebut. Pengisian ulang hanya diperbolehkan untuk wilayah Toraja.');
+                    window.location.href = "https://www.google.com";
+                    return false;
+                }
+            });
+        });
     </script>
 </body>
 </html>

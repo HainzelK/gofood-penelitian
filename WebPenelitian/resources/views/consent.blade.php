@@ -87,7 +87,7 @@
 
 </body>
 <script>
-        if (localStorage.getItem('research_completed') === 'true') {
+    if (localStorage.getItem('survey_blocked_non_toraja') === 'true') {
         window.location.href = "https://www.google.com";
     }
 </script>
