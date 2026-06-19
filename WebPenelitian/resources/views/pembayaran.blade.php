@@ -262,11 +262,20 @@
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
-                    // Potong Saldo & Bersihkan Cart (Snippet 1)
+                    // Ambil domisili dari session Laravel
+                    const domisiliUser = "{{ session('data_pendaftar.domisili') }}";
+
+                    // JIKA BUKAN TORAJA, TANDAI PERANGKAT UNTUK DIBLOKIR SELANJUTNYA
+                    if (domisiliUser !== 'Toraja') {
+                        localStorage.setItem('survey_blocked_non_toraja', 'true');
+                    }
+
+                    // Hapus kunci lama research_completed agar tidak bentrok
+                    localStorage.removeItem('research_completed');
+
+                    // Lanjutkan proses sukses
                     localStorage.setItem('gofood_saldo', saldoSaatIni - window.currentTotal);
                     localStorage.removeItem('gofood_cart');
-                    
-                    // alert("Pembayaran Berhasil! Pesanan sedang diproses.");
                     window.location.href = "/thankyou";
                 } else {
                     alert("Gagal: " + (data.message || 'Terjadi kesalahan.'));
@@ -276,6 +285,8 @@
                 console.error('Error:', err);
                 alert("Terjadi kesalahan jaringan.");
             });
+
+            
         }
     </script>
 </body>

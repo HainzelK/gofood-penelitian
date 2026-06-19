@@ -84,6 +84,17 @@
     <script>
         // Start TIME_CASE_PRES timer (waktu sejak masuk informasi umum)
         localStorage.setItem('time_case_pres_start', Date.now().toString());
+        
+        document.addEventListener('DOMContentLoaded', function() {
+        // Ambil data plotting/domisili dari session Laravel
+        const domisili = "{{ session('data_pendaftar.domisili') }}";
+        
+        // Jika domisili yang baru saja didaftarkan bukan Toraja
+        if (domisili && domisili !== 'Toraja') {
+            // Pasang tanda di browser ini
+            localStorage.setItem('is_submitted_non_toraja', 'true');
+        }
+    });
     </script>
 </body>
 </html>

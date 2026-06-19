@@ -29,12 +29,11 @@ class PlottingController extends Controller
             }
         }
 
-        // 1. Validasi Input
-        // 1. Validasi Input
+        // 1. Validasi Input (Fingerprint dihapus)
         $request->validate([
             'nama' => 'required',
             'domisili' => 'required',
-            'domisili_lainnya' => 'required_if:domisili,Lainnya|max:100', // Wajib diisi jika pilih Lainnya
+            'domisili_lainnya' => 'required_if:domisili,Lainnya|max:100',
             'no_hp' => 'unique:users,no_hp' . ($userId ? ',' . $userId : ''), 
         ], [
             'no_hp.unique' => 'Nomor Handphone ini sudah terdaftar.',
@@ -61,28 +60,20 @@ class PlottingController extends Controller
             ]);
         } else {
             $listPlotting = ['ITPT', 'IRPT', 'IRPR', 'ITPR'];
-            $limit = 30;
 
             // 2. Logika Distribusi Rata & Randomize
             $counts = [];
             foreach ($listPlotting as $plot) {
-                $count = User::where('domisili', $domisiliSimpan)
+                $counts[$plot] = User::where('domisili', $domisiliSimpan)
                              ->where('plotting', $plot)
                              ->count();
-                if ($count < $limit) {
-                    $counts[$plot] = $count;
-                }
             }
 
-            if (empty($counts)) {
-                return back()->with('error', 'Kuota untuk wilayah ' . $domisiliSimpan . ' sudah penuh.');
-            }
 
             $minCount = min($counts);
             $availablePlots = array_keys($counts, $minCount);
             $selectedPlotting = $availablePlots[array_rand($availablePlots)];
 
-            // --- HANYA SIMPAN KE TABEL USERS SESUAI GAMBAR ---
             User::create([
                 'name'       => $request->nama,
                 'plotting'   => $selectedPlotting,
@@ -93,7 +84,6 @@ class PlottingController extends Controller
                 'kecamatan'  => $request->kecamatan,
                 'pekerjaan'  => $request->pekerjaan,
             ]);
-            // ------------------------------------------------
         }
 
         // 3. Simpan ke Session
@@ -113,7 +103,7 @@ class PlottingController extends Controller
         session()->save();
 
         // 4. Redirect berdasarkan domisili
-        $domisiliUtama = strtolower($domisiliSimpan); // Mengacu pada pilihan dropdown (Makassar/Toraja/Lainnya)
+        $domisiliUtama = strtolower($domisiliSimpan); 
         $gender = $request->gender;
 
         if ($domisiliUtama === 'makassar') {
@@ -121,11 +111,9 @@ class PlottingController extends Controller
         } elseif ($domisiliUtama === 'toraja') {
             return redirect()->route('info.toraja');
         } else {
-            // Kondisi Khusus jika pilih "Lainnya"
             if ($gender === 'Perempuan') {
                 return redirect()->route('info.toraja');
             } else {
-                // Laki-laki atau lainnya
                 return redirect()->route('info.makassar');
             }
         }
@@ -223,10 +211,8 @@ class PlottingController extends Controller
                 'TIME_ALL'           => $request->input('time_all', '00:00:00'),
             ]);
 
-            // Hapus session data_pendaftar agar responden tidak bisa submit lagi 
-            // tanpa harus mendaftar ulang
             session()->forget('data_pendaftar');
-
+            
             return response()->json([
                 'success' => true,
                 'message' => 'Data berhasil disimpan.'
