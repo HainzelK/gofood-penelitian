@@ -59,8 +59,8 @@
         <!-- Pesan Tambahan & Navigasi -->
         <div class="text-center mt-6">
             <button onclick="window.location.href='/consent'" class="group flex items-center gap-3 bg-[#00880d] hover:bg-[#00700a] text-white font-bold py-4 px-10 rounded-2xl transition-all shadow-xl active:scale-95">
-                <i class="fas fa-home group-hover:-translate-x-1 transition-transform"></i>
-                Kembali ke Beranda
+                <i class="fas fa-door-open group-hover:-translate-x-1 transition-transform"></i>
+                Keluar
             </button>
         </div>
 
